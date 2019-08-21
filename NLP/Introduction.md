@@ -32,7 +32,9 @@ Firstly, there are tasks related to syntax. These are the tasks that have to dea
 &nbsp;&nbsp;&nbsp;&nbsp;A quick aside to understand the difference between stemming and lemmatization with examples:
 
 &nbsp;&nbsp;&nbsp;&nbsp;Stemming algorithms work by cutting off the end or the beginning of the word, taking into account a list of common prefixes
+
 &nbsp;&nbsp;&nbsp;&nbsp;and suffixes that can be found in an inflected word. This indiscriminate cutting can be successful in some occasions, but
+
 &nbsp;&nbsp;&nbsp;&nbsp;not always, and that is why we affirm that this approach presents some limitations. Below we illustrate the method with examples in both English and Spanish.
 
 | **Form** | **Suffix** | **Stem** |
@@ -43,8 +45,11 @@ Firstly, there are tasks related to syntax. These are the tasks that have to dea
 | niñez    |     -ez    |      niñ |
 
 &nbsp;&nbsp;&nbsp;&nbsp;Lemmatization, on the other hand, takes into consideration the morphological analysis of the words. To do so, it is necessary
+
 &nbsp;&nbsp;&nbsp;&nbsp;to have detailed dictionaries which the algorithm can look through to link the form back to its lemma.
+
 &nbsp;&nbsp;&nbsp;&nbsp;Again, you can see how it works with the same example words.
+
 
 | **Form** |                  **Morphological Information**                  | **Lemma** |
 |----------|:---------------------------------------------------------------:|----------:|
@@ -54,11 +59,17 @@ Firstly, there are tasks related to syntax. These are the tasks that have to dea
 | niñez    |                Singular number of the noun niñez                |     niñez |
 
 &nbsp;&nbsp;&nbsp;&nbsp;First, the stem can be the same for the inflectional forms of different lemmas. This translates into noise in our search results.
+
 &nbsp;&nbsp;&nbsp;&nbsp;In fact, it is very common to find entire forms as instances of several lemmas; In Telugu, the form for “robe” is identical
+
 &nbsp;&nbsp;&nbsp;&nbsp;to the form for “I don’t share”, so their stems are indistinguishable too. But they, of course, belong to different lemmas.
+
 &nbsp;&nbsp;&nbsp;&nbsp;The same happens in Gujarati, where the forms and stems for “beat” and “set up” coincide, but we can separate one from
+
 &nbsp;&nbsp;&nbsp;&nbsp;another by looking at their lemmas. Also, the same lemma can correspond to forms with different stems, and we need to treat
+
 &nbsp;&nbsp;&nbsp;&nbsp;them as the same word. For example, in Greek, a typical verb has different stems for perfective forms and for imperfective ones.
+
 &nbsp;&nbsp;&nbsp;&nbsp;If we were using stemming algorithms, we won't be able to relate them with the same verb, but using lemmatization it is possible to do so.
 
 * **Morphological segmentation** - *Morphology* is a fancy way of saying the structure of words. Morphological segmentation basically means to separate words into their individual parts, or in linguistic speak, their individual *morphemes*, and identify the “class”, or type, of the morphemes. The difficulty of this task depends greatly on the complexity of the morphology of the language being considered. English has fairly simple morphology, especially inflectional morphology (meaning English doesn’t have many prefixes and suffixes that change the meaning of a word), and thus it is often possible to ignore this task entirely and simply model all possible forms of a word (e.g. "prickle, prickles, prickled, prickling") as separate words. In languages like Turkish and Arabic, however, such an approach is not possible, as each dictionary entry has thousands of possible word forms.
