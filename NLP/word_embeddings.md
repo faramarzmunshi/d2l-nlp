@@ -38,9 +38,9 @@ One of the first comparisons between count-based and prediction-based distributi
 ### Subword-based and Character-based Embeddings
 
 Learning continuous representations of words has a long history in natural language processing (Rumelhart et al., 1988). These representations are typically derived from large unlabeled corpora using co-occurrence statistics (Deerwester et al., 1990; Schütze, 1992; Lund and Burgess, 1996). A large body of work, known as distributional semantics, has studied the properties of these methods (Turney et al., 2010; Baroni and Lenci, 2010). In the neural network community, Collobert and Weston (2008) proposed to learn word embeddings using a feedforward neural network, by predicting a word based on the two words on the left and two words on the right. More recently, Mikolov et al. (2013b) proposed simple log-bilinear models to learn continuous representations of words on very large corpora efficiently.
-Most of these techniques represent each word of the vocabulary by a distinct vector, without parameter sharing. In particular, they ignore the internal structure of words, which is an important limitation for morphologically rich languages, such as Turkish or Finnish. For example, in French or Spanish, most verbs have more than forty different inflected forms, while the Finnish language has fifteen cases for nouns. These languages contain many word forms that occur rarely (or not at all) in the training corpus, making it difficult to learn good word representations. Because many word formations follow rules, it is possible to improve vector representations for morphologically rich languages by using character level information.
+Most of these techniques represent each word of the vocabulary by a distinct vector, without parameter sharing. In particular, they ignore the internal structure of words, which is an important limitation for morphologically rich languages, such as Turkish or Finnish. For example, in French or Spanish, most verbs have more than forty different inflected forms, while the Finnish language has fifteen cases for just nouns. These languages contain many word forms that occur rarely (or not at all) in the training corpus, making it difficult to learn good word representations. Because many word formations follow rules, it is possible to improve vector representations for morphologically rich languages by using character level information.
 
-In recent years, many methods have been proposed to incorporate morphological information into word representations. To model rare words better, Alexandrescu and Kirchhoff (2006) introduced factored eural language models, where words are represented as sets of features. These features might include morphological information, and this technique as succesfully applied to morphologically rich languages, such as Turkish (Sak et al., 2010). Recently, several works have proposed different composition functions to derive representations of words rom morphemes (Lazaridou et al., 2013; Luong t al., 2013; Botha and Blunsom, 2014; Qiu et l., 2014). These different approaches rely on a morphological decomposition of words.
+In recent years, many methods have been proposed to incorporate morphological information into word representations. To model rare words better, Alexandrescu and Kirchhoff (2006) introduced factored eural language models, where words are represented as sets of features. These features might include morphological information, and this technique as succesfully applied to morphologically rich languages, such as Turkish (Sak et al., 2010). Recently, several works have proposed different composition functions to derive representations of words from morphemes (Lazaridou et al., 2013; Luong t al., 2013; Botha and Blunsom, 2014; Qiu et l., 2014). These different approaches rely on a morphological decomposition of words.
 
 ## Limitations
 
@@ -473,3 +473,9 @@ And the last analogy: 'do : did :: go :'.
 ```{.python .input}
 get_top_k_by_analogy(vocab, 1, 'do', 'did', 'go')
 ```
+
+# References
+
+- https://medium.com/analytics-vidhya/introduction-to-natural-language-processing-part-1-777f972cc7b3
+- https://gluon-nlp.mxnet.io/examples/word_embedding/word_embedding.html
+-
