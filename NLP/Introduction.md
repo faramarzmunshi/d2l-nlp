@@ -185,7 +185,7 @@ Compositionality and learning are intimately related: Both concern the ability o
 
 ## Relationships to other fields
 
-To give a small break to the reader, we analyse the relationship NLP has to three key fields: Linguistics, AI, and Statistics.
+To provide a small respite to the reader from the heavily detailed text, we analyse the relationship NLP has to three key fields: Linguistics, AI, and Statistics.
 
 As evidenced above, NLP is heavily related to linguistics and many of the tasks as well as breakdowns of problems are linguistically based. The terms and definitions for giving language structure have already been well-defined by linguistics. The overall goal of the field is lofty yet simple: to describe language, whether through simple models which can predict language behaviour, or through complex machine learning models that we'll build soon. The goal is to understand what's actually universal about a language, and through these formal models that are usually logic based, understand how language can be acquired. Formal models from linguistics have been of particular value in NLP, yet the goals are not the same as NLP. A single counterexample can invalidate a model in linguistic theory, but wouldn't necessarily lessen its value significantly for NLP. NLP must address all the pheonomena that arise in an application, while linguistics usually may focus on a select set of phenomena to give insight into the language faculty.
 
