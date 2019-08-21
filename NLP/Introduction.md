@@ -77,11 +77,11 @@ These tasks below relating to semantics or the meanings of words are majority mo
 
 * **Recognizing Textual entailment** - Entailment is an important concept and word that appears multiple times thoughout NLP literature. Entailment can be illustrated with examples of three different relations:
 
-- An example of a positive TE (text entails hypothesis) is:<br> __text__: If you help the needy, God will reward you.<br> __hypothesis__: Giving money to a poor man has good consequences.
+  * An example of a positive TE (text entails hypothesis) is:<br> __text__: If you help the needy, God will reward you.<br> __hypothesis__: Giving money to a poor man has good consequences.
 
-- An example of a negative TE (text contradicts hypothesis) is: <br> __text__: If you help the needy, God will reward you. <br> __hypothesis__: Giving money to a poor man has no consequences.
+  * An example of a negative TE (text contradicts hypothesis) is: <br> __text__: If you help the needy, God will reward you. <br> __hypothesis__: Giving money to a poor man has no consequences.
 
-- An example of a non-TE (text does not entail nor contradict) is:<br> __text__: If you help the needy, God will reward you.<br>__hypothesis__: Giving money to a poor man will make you a better person.
+  * An example of a non-TE (text does not entail nor contradict) is:<br> __text__: If you help the needy, God will reward you.<br>__hypothesis__: Giving money to a poor man will make you a better person.
 
 Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
 
