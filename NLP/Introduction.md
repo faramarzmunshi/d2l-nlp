@@ -4,10 +4,10 @@ The best introduction to NLP or Natural Language Processing, is to understand th
 
 * Understand the fundamental problems in NLP (check)
 * Understand the divisions between the problems in NLP (check)
-* Understand the relationship between NLP and other fields of research (not done)
+* Understand the relationship between NLP and other fields of research (check)
 * Briefly introduce both statistical as well as linguistic approaches to solving a variety of the aforementioned problems, the logic behind the solutions, and the unification of the linguistic and statistical approaches (check)
-* Briefly understand the basic syntax and definitions of certain terms with pertinence to the English language
-* Introduce the case study of Sentiment Analysis and the scale of even a single problem in NLP
+* Briefly understand the basic syntax and definitions of certain terms with pertinence to the English language (in process)
+* Introduce the case study of Sentiment Analysis and the scale of even a single problem in NLP (in process)
 
 Words that are *italicized* are special vocabulary words that will be extremely helpful to remember and understand for future NLP work. They are also included in a glossary at the end. There are exercises at the end of this section to help you, the reader, understand and work through a simple NLP example and start formulating basic solutions for these complex problems.
 
@@ -189,56 +189,55 @@ Machine Learning, or glorified mass-data statistics, started off at a disadvanta
 
 ## Basic syntactic structure of English
 
-* Brief explanation of key linguistic terms
-    * homonym, phonemes, morphemes, etc.
-    * tokens / words / characters
-* Zipf’s law
-* Basic Syntactic Structures of English
-    * parts of speech
-        * include noun, verb, adjective, adverb, pronoun, preposition, conjunction, article
-        * verbs occur in different (inflected) forms:
-            * base or infinitive ("be", "eat", "sleep"), present tense ("is", "am", "are"; "eats", "eat"; "sleeps", "sleep"), past tense ("was", "were"; "ate"; "slept"), present participle ("being", "eating"; "sleeping"), past participle ("been", "eaten"; "slept")
-        * pronouns occur in nominative ("I") and accusative ("me") forms ["cases"]
-    * phrases: classifying them by part of speech of main word or by syntactic role
-        * subject and predicate; noun phrase and verb phrase
-            In "The young cats drink milk.", "The young cats" is a noun phrase and the subject;
-            "drink milk" is a verb phrase and the predicate
-        * the main word is the _head_ of the phrase: "cats" in "the young cats"
-    * verb complements and modifiers
-        * types of complements ... noun phrases, adjective phrases, prepositional phrases, particles
-        * noun phrase: I served _a brownie_.
-            adjective phrase: I remained _very rich_.
-            prepositional phrase: I looked _at Fred_.
-            particles: He looked _up_ the number.
-        * distinguishing particles from prepostions
-        * clauses; clausal complements
-        * tenses: simple past, present, future; progressive, perfect
-            * simple present: John bakes cookies.
-                present progressive: John is baking cookies.
-                present perfect: John has baked cookies.
-        * active vs. passive
-            * active: Bernie ate the banana.
-                passive: The banana was eaten by Bernie.
-    * noun phrase structure
-        * left modifiers: determiner, quantifier, adjective, noun
-            * the five shiny tin cans
-        * right modifiers: prepositional phrases and apposition
-            * prepositional phrase: the man _in the moon_
-                apposition: Scott, _the Arctic explorer_,
-        * relative clauses
-            * the man _who ate the popcorn_
-                the popcorn _which the man ate_
-                the man _who is eating the popcorn_
-                the tourist _who was eaten by a lion_
-        * reduced relative clauses
-            * the man _eating the popcorn_
-                the man _eaten by a lion_
-    * coordinating and subordinating conjunctions
-* Comparison with other languages
-    * Properties of different languages (e.g. weird endings in Turkish, declination / flexion, word order, verb placement, conjugations based on subject/objects etc.)
-    * word segmentation (required for Japanese and Chinese)
-    * inflectional and derivational morphology
-    * fixed vs. free word order
+One of the most helpful ways to get into NLP and more linguistic studies, is to first understand the basics of a single language. Here, we cover a brief overview of some key linguistic terms, their plain english equivalents, and examples of each. We also cover basic syntactic structure of the English language so when addressing certain pieces of a text, more specific language can be leveraged for a greater understanding of models' learnings and failings.
+
+Firstly, let's start by reviewing parts of speech. Parts of speech are labels or identifiers that indicate the role a word may play in a sentence. The most major parts of speech are nouns, verbs, adjectives, and adverbs. These are considered "open classes," while parts of speech like pronouns, prepositions, and conjunctions are considered "closed classes." This is as a result of the fact that the closed classes can be specifically enumerated with little effort, while the open classes are not very limited in their scopes. In English in particular, the same word may have several parts of speech, contributing to the ambiguity problem rampant throughout NLP.
+
+A *noun* is a person, place or thing. It can have a plural or possessive form, like cat -> cats or cat -> cat's/cats'
+There's also a difference between countable nouns vs. mass nouns; singular countable nouns appear with a determiner. This is linguistic speak to say a singular noun that can be counted and is specific, must have a determiner, or the word "the" or "a" along with it (usually articles or possessive pronouns (i.e. my, his, etc)). For example, one could say "Cats sleep," but to say "cat sleeps" is grammatically incorrect as there is no determiner in the sentence. "The cat sleeps" or "My cat sleeps" is the correct form of that sentence. In languages like Mandarin, there isn't always this same difference.
+
+A *verb* is simply an action; the easiest test is to put a verb into the sentence "they must ____ it" where the blank is the word. Most verbs can appear in different inflected forms. The several forms can be simplified to the following five: base/infinitive form ("be"; "eat"; "sleep"), present tense ("is", "am", "are"; "eats","eat"; "sleeps", "sleep"), past tense ("was", "were"; "ate"; "slept"), present participle ("being","eating"; "sleeping"), or past participle ("been"; "eaten"; "slept").
+
+*Adjectives* describe nouns. No matter the base form of the word, any word that describes a noun is considered an adjective. They can appear in comparative or superlative forms (happy -> happier (comparative), happiest (superlative)) as well as with an intensifier (an adverb in nature, i.e. happy -> very happy). We cannot consider a word an adjective just because it appears as a modifier to the left of a noun (the brick wall). Most nouns can appear in this position.
+
+*Adverbs* describe the action of the sentence. Their most unique characteristic in English is their movement throughout a sentence. All of the following are using the adverb "quickly," but they all appear in different places.
+
+- He ate the brownie quickly.
+- He quickly ate the brownie.
+- Quickly, he ate the brownie.
+
+*Pronouns* are words that refer to nouns but don't directly use the noun itself. Examples of pronouns are I, he, him, them, they, etc. Personal pronouns are pronouns that refer to a person in particular. They can occur in the nominative (I/he) or accusative (me, him). Nominative means in place of the subject of the sentence or phrase, or accusative means used in an object portion of the sentence or phrase.  
+
+The word *phrase* has come up multiple times. Phrases can be classified by the part of speech of the main word and the syntactic role it plays in the sentence. For example, in the sentence "The young cats drink milk," "The young cats" is a noun phrase, or in other terms, the subject of the sentence, and "drink milk" is the verb phrase or predicate of the sentence.
+
+To tie back into verbs, verbs must be followed by particular structures appropriate to the verb, or what is called the *verb's complement* (note the spelling!). Here are examples of some of the complements that can occur in different parts of the sentence:
+
+- Noun phrase: I served __a brownie__.
+- Adjective phrase: I remained __very rich__.
+- Prepositional phrase: I looked __at Fred__.
+- Particles: He looked __up__ the number.
+
+If a verb can occur without a complement, like in the example, "He died," the verb is considered *intransitive*.
+
+Prepositions and particles are hard to distinguish: prepositions must precede the noun phrase while particles can change places with the noun phrase. For example: "he looked up the number" versus "he looked the number up" is an example of a particle. A preposition must always precede the noun phrase: "he walked into the room" versus "he walked the room into" (doesn't make sense). So what's the point of distinguishing these two concepts? Because the two constructs may have very different meanings, evident especially in ambiguous examples like "He looked up the street."
+
+You may also have clausal complements that in and of itself may be a complete sentence. For example, in the sentence "I dreamt I won a million koalas," the complement of the verb "dreamt" here, is the entire phrase "I won a million koalas."
+
+*Adjuncts* are different than complements. A verbal modifier, or an adjunct, can be deleted without changing the basic meanings of a sentence. For example:
+
+> He treated her __in the doctor's office__.
+
+Here, it's easily possible to delete the underlined phrase without fundamentally changing the meaning of the sentence. While that's the case for adjuncts, for complements, a deletion would result in a change of meaning. For example:
+
+> He treated her __as an equal__.
+
+The difference is not always clear cut, and each may have different readings associated with the same format. For example:
+
+> He seemed to please his teacher [complement]
+> He appeared to please his teacher [ambiguous]
+> He disappeared to please his teacher [adjunct]
+
+
     * Code switching (do we want to include this?)
 
 ## Sentiment analysis: a case study
