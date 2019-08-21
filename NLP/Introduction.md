@@ -8,6 +8,7 @@ The best introduction to NLP or Natural Language Processing, is to understand th
 * Briefly introduce both statistical as well as linguistic approaches to solving a variety of the aforementioned problems
 * And introduce the case study of Machine Translation and the scale of even a single problem in NLP
 
+Words that are *italicized* are special vocabulary words that will be extremely helpful to remember and understand for future NLP work. They are also included in a glossary at the end. There are exercises at the end of this section to help you, the reader, understand and work through a simple NLP example and start formulating basic solutions for these complex problems.
 
 ## The fundamental problems in NLP and their respective categories
 
@@ -33,9 +34,31 @@ Firstly, there are tasks related to syntax. These are the tasks that have to dea
 
 * **Parsing** - This task is relatively difficult and composed of multiple subtasks. The overview is to determine the parse tree or the "grammatical analysis" of a given sentence. This is similar to "diagramming" a sentence; understanding the words, parts of speech, how these fit together, what modifies what, etc. The grammar for natural languages is ambiguous and typical sentences have multiple possible analyses. In fact, perhaps surprisingly, for a typical sentence there may be thousands of potential parses (most of which will seem completely nonsensical to a human). There are two primary types of parsing, Dependency Parsing and Constituency Parsing. Dependency Parsing focuses on the relationships between words in a sentence (marking things like Primary Objects and predicates, whereas Constituency Parsing focuses on building out the Parse Tree using a Probabilistic Context-Free Grammar (PCFGs).
 
-* **Sentence breaking** - Given a chunk of text, find the sentence boundaries. Sentence boundaries are often marked by periods or other punctuation marks, but these same characters can serve other purposes (e.g. marking abbreviations).
+* **Sentence breaking** - This task refers to the process of, given a chunk of text, finding the sentence boundaries. Sentence boundaries are often marked by periods or other punctuation marks, but these same characters can serve other purposes (e.g. marking abbreviations). Having a task that explicitly can mark the end of sentences and the beginning of the next is quite helpful in a variety of other tasks downstream.
 
-* **Stemming** - The process of reducing inflected (or sometimes derived) words to their root form. (e.g. "close" will be the root for "closed", "closing", "close", "closer" etc).
+* **Stemming** - Stemming refers to the process of reducing inflected words to their root form. (e.g. "burp" will be the root for "burped", "burping", "burp", "burps" etc).
+
+A quick aside to understand the difference between stemming and lemmatization with examples:
+
+Stemming algorithms work by cutting off the end or the beginning of the word, taking into account a list of common prefixes and suffixes that can be found in an inflected word. This indiscriminate cutting can be successful in some occasions, but not always, and that is why we affirm that this approach presents some limitations. Below we illustrate the method with examples in both English and Spanish.
+
+| **Form** | **Suffix** | **Stem** |
+|----------|:----------:|---------:|
+| studies  |     -es    |    studi |
+| studying |    -ing    |    study |
+| niñas    |     -as    |      niñ |
+| niñez    |     -ez    |      niñ |
+
+Lemmatization, on the other hand, takes into consideration the morphological analysis of the words. To do so, it is necessary to have detailed dictionaries which the algorithm can look through to link the form back to its lemma. Again, you can see how it works with the same example words.
+
+| **Form** |                  **Morphological Information**                  | **Lemma** |
+|----------|:---------------------------------------------------------------:|----------:|
+| studies  | Third person, singular number, present  tense of the verb study |     study |
+| studying |                     Gerund of the verb study                    |     study |
+| niñas    |         Feminine gender, plural number of the noun niño         |      niño |
+| niñez    |                Singular number of the noun niñez                |     niñez |
+
+First, the stem can be the same for the inflectional forms of different lemmas. This translates into noise in our search results. In fact, it is very common to find entire forms as instances of several lemmas; In Telugu, the form for “robe” is identical to the form for “I don’t share”, so their stems are indistinguishable too. But they, of course, belong to different lemmas. The same happens in Gujarati, where the forms and stems for “beat” and “set up” coincide, but we can separate one from another by looking at their lemmas. Also, the same lemma can correspond to forms with different stems, and we need to treat them as the same word. For example, in Greek, a typical verb has different stems for perfective forms and for imperfective ones. If we were using stemming algorithms we won't be able to relate them with the same verb, but using lemmatization it is possible to do so. 
 
 * **Word segmentation** - Separate a chunk of continuous text into separate words. For a language like English, this is fairly trivial, since words are usually separated by spaces. However, some written languages like Chinese, Japanese and Thai do not mark word boundaries in such a fashion, and in those languages text segmentation is a significant task requiring knowledge of the vocabulary and morphology of the words in the language.
 
@@ -106,6 +129,82 @@ In linguistics, semantic representations are generally logical forms: expression
 
 Thus far, we have allowed compositionality and learning to each tell its own story of generalization and productivity. We now show that the two are intimately related. Both concern the ability of a system (human or artificial) to generalize from a finite set of experiences to a creative capacity, and to come to grips with new inputs and experiences effectively. From this perspective, compositionality is a claim about the nature of this ability when it comes to linguistic interpretation, and learning theory offers a framework for characterizing the conditions under which a system can attain this ability in principle. Moreover, establishing the relationship between compositionality and learning provides a recipe for synthesis: the principle of compositionality guides researchers on specific model structures, and machine learning provides them with a set of methods for training such models in practice. More specifically, the claim of compositionality is that being a semantic interpreter for a language L amounts to mastering the syntax of L, the lexical meanings of L, and the modes of semantic combination for L. This also suggests the outlines of a learning task. The theories sketched above suggest a number of ways of refining this task in terms of the triples hu, s, di. We discuss two in detail. The pure semantic parsing task (section 4.1) is to learn an accurate mapping from utterances u to logical forms s. The interpretation task (section 4.2) is to learn an accurate mapping from utterances u to denotations d via latent semantic representations, in effect combining semantic parsing and interpretation. Throughout our review of the two tasks, we rely on the small illustrative example in figure 2. The figure is based around the utterance “two times two plus three”. Candidate semantic representations are given in row (a). The middle candidate y2 contains a lexical pairing that is illicit in the true, target grammar (table 1). This candidate is a glimpse into the unfettered space of logical forms that our learning algorithm needs to explore. Our feature vector counts lexical pairings and inspects the root-level operator, as summarized in the boxes immediately below each candidate. Row (b) of figure 2 describes how the semantic parsing model operates on these candidates, and row (c) does the same for the interpretation model. The next two subsections describe these processes in detail.
 
+## Relationships to other fields
+
+* *Linguistics*
+        * goal of linguistics is to describe language
+            * provide simple models which can predict language behavior
+        * understand what is universal about language
+    * through these formal models, understand how language can be acquired
+    * formal models from linguistics have been of value in NLP, but its goals are not the same as NLP, a single counterexample can invalidate a model as a linguistic theory, but would not significantly lessen its value for NLP
+    * NLP must address all phenomena which arise in an application, while linguistics may focus on select phenomena which give insight into the language faculty
+* *Artificial Intelligence*
+    * classical 'symbolic' AI is concerned primarily with generic problem solving strategies & suitable knowledge representations
+    * there is an inherent link between AI and NLP: some NLP problems require the sort of deep reasoning addressed by these AI methods
+    * but NLP (and AI) has found increasing success through avoiding deep reasoning and turning instead to
+* *Statistics and Machine Learning*
+    * early NLP systems (before 1990) were purely symbolic and hand crafted
+    * statistical methods and models have become more widely used in NLP since the mid 1990's
+    * easily trainable and easily computable models have for some NLP tasks proven much more effective than more complex hand-crafted models; furthermore, they have become more attractive now that lots of training data is available
+    * The past few years have seen the rapid growth of neural network (Deep Learning) models for NLP, achieving better performance than earlier models (e.g. log-linear models)
+
+## Basic syntactic structure of English
+
+* Brief explanation of key linguistic terms
+    * homonym, phonemes, morphemes, etc.
+    * tokens / words / characters
+* Zipf’s law
+* Basic Syntactic Structures of English
+    * parts of speech
+        * include noun, verb, adjective, adverb, pronoun, preposition, conjunction, article
+        * verbs occur in different (inflected) forms:
+            * base or infinitive ("be", "eat", "sleep"), present tense ("is", "am", "are"; "eats", "eat"; "sleeps", "sleep"), past tense ("was", "were"; "ate"; "slept"), present participle ("being", "eating"; "sleeping"), past participle ("been", "eaten"; "slept")
+        * pronouns occur in nominative ("I") and accusative ("me") forms ["cases"]
+    * phrases: classifying them by part of speech of main word or by syntactic role
+        * subject and predicate; noun phrase and verb phrase
+            In "The young cats drink milk.", "The young cats" is a noun phrase and the subject;
+            "drink milk" is a verb phrase and the predicate
+        * the main word is the _head_ of the phrase: "cats" in "the young cats"
+    * verb complements and modifiers
+        * types of complements ... noun phrases, adjective phrases, prepositional phrases, particles
+        * noun phrase: I served _a brownie_.
+            adjective phrase: I remained _very rich_.
+            prepositional phrase: I looked _at Fred_.
+            particles: He looked _up_ the number.
+        * distinguishing particles from prepostions
+        * clauses; clausal complements
+        * tenses: simple past, present, future; progressive, perfect
+            * simple present: John bakes cookies.
+                present progressive: John is baking cookies.
+                present perfect: John has baked cookies.
+        * active vs. passive
+            * active: Bernie ate the banana.
+                passive: The banana was eaten by Bernie.
+    * noun phrase structure
+        * left modifiers: determiner, quantifier, adjective, noun
+            * the five shiny tin cans
+        * right modifiers: prepositional phrases and apposition
+            * prepositional phrase: the man _in the moon_
+                apposition: Scott, _the Arctic explorer_,
+        * relative clauses
+            * the man _who ate the popcorn_
+                the popcorn _which the man ate_
+                the man _who is eating the popcorn_
+                the tourist _who was eaten by a lion_
+        * reduced relative clauses
+            * the man _eating the popcorn_
+                the man _eaten by a lion_
+    * coordinating and subordinating conjunctions
+* Comparison with other languages
+    * Properties of different languages (e.g. weird endings in Turkish, declination / flexion, word order, verb placement, conjugations based on subject/objects etc.)
+    * word segmentation (required for Japanese and Chinese)
+    * inflectional and derivational morphology
+    * fixed vs. free word order
+    * Code switching (do we want to include this?)
+
+## Sentiment analysis: a case study
+
+## More on CFGs (context-free grammars)
 
             * Context-free grammars
                 * consists of non-terminal symbols (including a start symbol), terminal symbols, and productions, rewrite operation
@@ -123,7 +222,13 @@ Thus far, we have allowed compositionality and learning to each tell its own sto
         * data sparsity?
 
 
-References:
+
+## Exercises for the reader
+1. Break Machine Translation down into its relative subtasks, and formulate a generic solution on how you'd approach the problem with the amalgamation of other tasks mentioned above.
+2. What's a special aspect of the language which you speak compared to a foreign language you have learned (whether it be English vs Mandarin/English vs Turkish etc.)? Is this a syntactic, semantic, or pragmatic difference between the languages? How could a machine start to decipher the meaning behind these different aspects using the tasks mentioned above?
+3.
+
+## References:
 
 * https://becominghuman.ai/a-simple-introduction-to-natural-language-processing-ea66a1747b32
 * https://en.wikipedia.org/wiki/Pragmatics
@@ -140,3 +245,17 @@ References:
 * van Eijck J, Unger C. 2010. Computational Semantics with Functional Programming. Cambridge: Cambridge University Press
 * https://web.stanford.edu/~cgpotts/manuscripts/liang-potts-semantics.pdf
 * http://www.ijircce.com/upload/2014/sacaim/59_Paper%2027.pdf
+
+
+
+
+## Glossary:
+semantics
+Syntax
+Pragmatics
+inflectional endings
+Morphology
+morphemes
+Part of speech
+Stemming
+lexical
