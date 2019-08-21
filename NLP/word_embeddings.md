@@ -6,11 +6,11 @@ Word embeddings are a very useful representation of vocabulary for machine learn
 
 ## Evaluation of word embeddings
 
-The goal of word embeddings is simple: a good embedding will provide a vector representation of a word such that its vector representation when compared with that of another word mirrors the total linguistic relationship between the two words. In the previous section we went over the number of linguistic relationships words can have with one another, and the variability in expressiveness of these characteristics will influence the performance of word embeddings.
+The goal of word embeddings is simple: a good embedding will provide a vector representation of a word such that its vector representation when compared with that of another word mirrors the total linguistic relationship between the two words. In the previous section, we went over the number of linguistic relationships words can have with one another, and the variability in expressiveness of these characteristics will influence the performance of word embeddings.
 
 The paper by Schnabel et al in 2015 provides a standard for evaluation methods with regards to unsupervised word embeddings. We can break up evaluation of word embeddings into two distinct categories: Intrinsic and Extrinsic evaluation. Extrinsic evaluation refers to "using word embeddings as input features to a downstream task and measuring changes in performance metrics specific to that task" to evaluate the quality of the word embeddings. Examples of such downstream tasks range from part-of-speech (POS) tagging to named-entity recognition (NER) (Pennington et al., 2014). Extrinsic evaluation only provides a single way in specifying the "goodness" of an embedding, and it is relatively unclear how these measurements connect to other measures of "goodness."
 
-Intrinsic evaluations test for syntactic and semantic relationships between specific words (Mikolov et al, 2013a; Baroni et al. 2014). The tasks typically require and involve a pre-selected set of query terms and semantically related target words, which are referred to as the "query inventory." The methods are then evaluated by compiling aggregate scores for each method such that the correlation coefficient serves as an absolute measure of quality. Query inventories were plethoric as psycholinguistics, information retrieval, and image analysis featured similar datasets, but the idiosyncracity as well as the specifics of the queries led to poorly calibrated corpus statistics. In Schnabel et. al, they provided a newer model to constructing fair query inventories, picking words in an ad hoc fashion and selecting for diversity with respect to frequency, parts-of-speech, and abstractness.
+Intrinsic evaluations test for syntactic and semantic relationships between specific words (Mikolov et al, 2013a; Baroni et al. 2014). The tasks typically require and involve a pre-selected set of query terms and semantically related target words, which are referred to as the "query inventory." The methods are then evaluated by compiling aggregate scores for each method such that the correlation coefficient serves as an absolute measure of quality. Query inventories were plethoric as psycholinguistics, information retrieval, and image analysis featured similar datasets, but the specificity of the queries led to poorly calibrated corpus statistics. In Schnabel et. al, they provided a newer model to constructing fair query inventories, picking words in an ad hoc fashion and selecting for diversity with respect to frequency, parts-of-speech, and abstractness.
 
 Intrinsic evaluation is further dissected into four main categories: relatedness, analogies, categorization, and selectional preference. Relatedness refers to testing on datasets containing relatedness scores for pairs of words; the cosine similarity of the embeddings of the two words should have high correlation with the human relatedness scores. The second test is analogies, popularized by Mikolov et. al in 2013. The goal was to find the best term x for a given term y such that the relationship between x and y best matches that of the relationship between a and b. The third task is categorization; the goal being to recover a clustering of words into different categories. To do this, the corresponding word vectors of all words in the dataset are clustered and the purity of the returned clusters is computed with respect to the labeled dataset. Selectional preference is the last task; the goal being to determine how typical a noun is for a verb either as a subject or as an object, (e.g. people eat, but we rarely eat people).
 
@@ -73,7 +73,7 @@ The *vocabulary* we obtain from this set of documents is (High, five, I, am, old
 
 We can create a matrix representing the relationship between each term from our vocabulary and the document. Each element in the matrix represents how many times that term appears in that particular document.
 
-[Bag Of Words Matrix][BOW.png]
+![Bag Of Words Matrix][images/BOW.png]
 
 Using this matrix, we can obtain the vectors for each word as well as document. We can vectorize “five” as [1,0,1] and “Document 2” as [0,0,1,1,1,0,0].
 Bag of words is not a good representation of language, especially when you have a small vocabulary. It ignores word order, word relationships and produces sparse vectors that is largely filled with zeros. We also see here from our small example that the words “I”, “am”, “old” are mapped to the same vector. This implies that these words are similar, something which we know not to be true.
@@ -474,7 +474,11 @@ And the last analogy: 'do : did :: go :'.
 get_top_k_by_analogy(vocab, 1, 'do', 'did', 'go')
 ```
 
-# References
+## Exercises
+1. Rewrite the sentiment analysis notebook's code to deal with a different embedding type you personally implemented.
+2.
+
+## References
 
 - https://medium.com/analytics-vidhya/introduction-to-natural-language-processing-part-1-777f972cc7b3
 - https://gluon-nlp.mxnet.io/examples/word_embedding/word_embedding.html
