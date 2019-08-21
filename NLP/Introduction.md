@@ -2,12 +2,12 @@
 
 The best introduction to NLP or Natural Language Processing, is to understand the varieties of problems NLP wishes to solve, their categorical breakdowns, a summary of their previous approaches, and a brief overview of how these problems are tackled currently. In this series of notebooks, we hope to do the following things:
 
-* Understand the fundamental problems in NLP (check)
-* Understand the divisions between the problems in NLP (check)
-* Understand the relationship between NLP and other fields of research (check)
+* Understand the fundamental problems in NLP
+* Understand the divisions between the problems in NLP
+* Understand the relationship between NLP and other fields of research
 * Briefly introduce both statistical as well as linguistic approaches to solving a variety of the aforementioned problems, the logic behind the solutions, and the unification of the linguistic and statistical approaches (check)
 * Briefly understand the basic syntax and definitions of certain terms with pertinence to the English language (in process)
-* Introduce the case study of Sentiment Analysis and the scale of even a single problem in NLP (in process)
+* Introduce the case study of Sentiment Analysis and the scale of even a single problem in NLP
 
 Words that are *italicized* are special vocabulary words that will be extremely helpful to remember and understand for future NLP work. They are also included in a glossary at the end. There are exercises at the end of this section to help you, the reader, understand and work through a simple NLP example and start formulating basic solutions for these complex problems.
 
@@ -262,6 +262,8 @@ And last but not least, are conjunctions. Conjunctions simply link the same part
 English is a special case of language. We tend to ignore certain problems by focus on English as the main language. Firstly, text segmentation is not an issue in English at all. In languages like Japanese and Chinese, there's an entire stage of processing for any NLP task which involves segmenting the text into words as a combination of characters. In addition, there's a highly limited morphology in English; one can enter all word forms in a dictionary, because inflectional and derivational morphology are relatively simple. This basically refers to verb tenses, singular/plural words, and nominalization (manipulate -> manipulation). Additionally, English is relatively fixed in its word order; in languages like Arabic or Chinese, there's a freer word order, but even freer word order in languages with case markings.
 
 ---
+
+In the next notebook, we talk about and code a simple semantic analysis model and demonstrate the variety of steps required to build an NLP model.
 
 ## More on CFGs (context-free grammars) DO WE WANT THIS HERE?
 

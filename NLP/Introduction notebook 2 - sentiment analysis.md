@@ -28,7 +28,7 @@ Essentially, sentiment analysis or sentiment classification fall into the broad 
 Consider the following phrases:
 
 "Mulan is a great movie."
-"Mulan is not a great movie."
+"Mulan is not a good movie."
 "Mulan is a movie."
 
 The phrases correspond to short film reviews, and each one of them conveys different sentiments. For example, the first phrase denotes positive sentiment about the film Mulan while the second one treats the movie as positively negative (negative sentiment). Take a look at the third one more closely. There is no such word in that phrase which can tell you about anything regarding the sentiment conveyed by it. Hence, the last is an example of neutral sentiment.
@@ -408,7 +408,10 @@ Indeed, we can feed in any sentence and determine the sentiment with relative ea
 
 ## Conclusion
 
-We built a Sentiment Analysis by reusing the feature extractor from a pre-trained language model. The modular design of Gluon blocks makes it very easy to put together models for various needs. GluonNLP provides powerful building blocks that substantially simplify the process of constructing an efficient data pipeline and versatile models.
+Sentiment analysis is a multi-step process that can in some places be simplified. Using a naive approach would have led to lesser accuracy and a larger amount of subtasks of which we avoided or circumvented by using pre-trained embeddings. We built a Sentiment Analysis by reusing the feature extractor from a pre-trained language model. The modular design of Gluon blocks makes it very easy to put together models for various needs. GluonNLP further enhances these powerful building blocks to substantially simplify the process of constructing efficient data pipelines and versatile models.
+
+## Exercises
+
 
 
 ## References
