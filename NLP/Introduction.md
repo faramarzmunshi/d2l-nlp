@@ -1,389 +1,134 @@
-# An Introduction to Word Embeddings
-
-## Why word embeddings matter
-
-Word embeddings are a very useful representation of vocabulary for machine learning purposes. The motive of word embeddings is to capture context, semantic and syntactic similarity, and represent these aspects through a geometric relationship between the embedding vectors. Formulation of these embeddings is often harder as we need to isolate what we actually want to know about the words. Do we want to have embeddings that share a common part of speech appear closer together? Or words with similar meanings appear geometrically closer than those without? How do we derive any of these relationships and how do we represent any of these features? All of these questions are answered in different manners according to the newest models as the field has developed, changing what word embeddings actually do for the down-stream task. The best way to understand why and how word embeddings developed the way they did, is to firstly understand how word embeddings are evaluated, and the different aspects which contribute to the success of different methods of embedding. 
-
-## Evaluation of word embeddings
-
-The goal of word embeddings is simple: a good embedding will provide a vector representation of a word such that its vector representation when compared with that of another word mirrors the total linguistic relationship between the two words. In the previous section we went over the number of linguistic relationships words can have with one another, and the variability in expressiveness of these characteristics will influence the performance of word embeddings. 
-
-The paper by Schnabel et al in 2015 provides a standard for evaluation methods with regards to unsupervised word embeddings. We can break up evaluation of word embeddings into two distinct categories: Intrinsic and Extrinsic evaluation. Extrinsic evaluation refers to "using word embeddings as input features to a downstream task and measuring changes in performance metrics specific to that task" to evaluate the quality of the word embeddings. Examples of such downstream tasks range from part-of-speech (POS) tagging to named-entity recognition (Pennington et al., 2014). Extrinsic evaluation only provides a single way in specifying the "goodness" of an embedding, and it is relatively unclear how these measurements connect to other measures of "goodness." 
-
-Intrinsic evaluations test for syntactic and semantic relationships between specific words (Mikolov et al, 2013a; Baroni et al. 2014). The tasks typically require and involve a pre-selected set of query terms and semantically related target words, which are referred to as the "query inventory." The methods are then evaluated by compiling aggregate scores for each method such that the correlation coefficient serves as an absolute measure of quality. Query inventories were plethoric as psycholinguistics, information retrieval, and image analysis featured similar datasets, but the idiosyncracity as well as the specifics of the queries led to poorly calibrated corpus statistics. In Schnabel et. al, they provided a newer model to constructing fair query inventories, picking words in an ad hoc fashion and selecting for diversity with respect to frequency, parts-of-speech, and abstractness. 
-
-Intrinsic evaluation is further dissected into four main categories: relatedness, analogies, categorization, and selectional preference. Relatedness refers to testing on datasets containing relatedness scores for pairs of words; the cosine similarity of the embeddings of the two words should have high correlation with the human relateness scores. The second test is analogies, popularized by Mikolov et. al in 2013. The goal was to find the best term x for a given term y such that the relationship between x and y best matches that of the relationship between a and b. The third task is categorization; the goal being to recover a clustering of words into different categories. To do this, the corresponding word vectors of all words in the dataset are clustered and the purity of the returned clusters is computed with respect to the labeled dataset. Selectional preference is the last task; the goal being to determine how typical a noun is for a verb either as a subject or as an object, (e.g. people eat, but we rarely eat people). 
-
-To divide evaluations by another metric is 
-
-
-### Distributional vs. Distributed representations
-
-Both of them are based on the distributional hypothesis that words occur in similar context tend to have similar meaning.
-
-Distribution representation is the high-dimensional vector representation obtained from the rows of the word-context co-occurrence matrix, whose dimension size equals to the vocabulary size of the corpus.
-
-Distributed representation is a low-dimensional vector representation, which can be obtained from a neural network based model (such as word2vec, Collobert and Weston embeddings, HLBL embeddings). The matrix factorization based model that perform matrix factorization on the word-context co-occurrence matrix (such as the Glove from Stanford using direct matrix factorization, the Latent Semantic Analysis using SVD factorization). The paper from Levy (Neural Word Embedding as Implicit Matrix Factorization) shows that the matrix factorization method and the neural network based method is somewhat equivalent.
-
-Actually, as Yoav Goldberg showed in the presentation "word embeddings what, how and whither" that the distributed representation can be obtained from distributional representation based on matrix factorization.
-
-
-### Count-based methods vs Prediction-based methods
-
-With the steady growth of textual data, NLP methods are required that are able to process the data efficiently. The focus recently of word embeddings has been on efficient methods that are targeted to compute distributional models that are based on the distributional hypothesis of Harris (1951). This hypothesis claims that words occurring in similar contexts tend to have similar meanings. In order to implement this hypothesis, early approaches (Hindle, 1990; Grefenstette, 1994; Lin, 1997) represented words using count-based vectors of the context. However, such representations are very sparse, require a lot of memory and are not very efficient. In the last decades, methods have been developed that transform such sparse representations into dense representations mainly using matrix factorization. With word2vec (Mikolov et al., 2013), an efficient prediction-based method was introduced, which also represents words with a dense vector. However, also sparse and count-based methods have been proposed that allow an efficient computation, e.g. (Kilgarriff et al., 2004; Biemann and Riedl, 2013). A more detailed overview of semantic representations can be found in (Lund and Burgess, 1996; Turney and Pantel, 2010; Ferrone
-and Zanzotto, 2017).
-
-One of the first comparisons between count-based and prediction-based distributional models was performed by Baroni et al. (2014). For this, they consider various tasks and show that prediction-based word embeddings outperform sparse count-based methods and dense count-based methods used for computing distributional semantic models. The evaluation is performed on datasets for relatedness, analogy, concept categorization and selectional preferences. The majority of word pairs considered for the evaluation consists of noun pairs. However, Levy and Goldberg (2014b) showed that dense count-based methods, using PPMI weighted co-occurrences and SVD, approximates neural word embeddings. Levy et al. (2015) showed in an extensive study the impact of various parameters and show the best performing parameters for these methods. The study reports results for various datasets for word similarity and analogy. However, they do not evaluate the performance on local similarity ranking tasks and omit results for pure count-based semantic methods. Claveau and Kijak (2016) performed another comparison of various semantic representation using both intrinsic and extrinsic evaluations. They compare the performance of their count-based method to dense representations and prediction-based methods using a manually crafted lexicon, SimLex and an information retrieval task. They show that their method performs better on the manually crafted lexicon than using word2vec. For this task, they also show that a word2vec model computed on a larger dataset yields inferior results than models computed on a smaller corpus, which is contrary to previous findings, e.g. (Banko and Brill, 2001; Gorman and Curran, 2006; Riedl and Biemann, 2013). Based on the SimLex task and the extrinsic evaluation they show comparable performance to the word2vec model computed on a larger corpus.
-
-### Subword-based and Character-based Embeddings
-
-Learning continuous representations of words has a long history in natural language processing (Rumelhart et al., 1988). These representations are typically derived from large unlabeled corpora using co-occurrence statistics (Deerwester et al., 1990; Schütze, 1992; Lund and Burgess, 1996). A large body of work, known as distributional semantics, has studied the properties of these methods (Turney et al., 2010; Baroni and Lenci, 2010). In the neural network community, Collobert and Weston (2008) proposed to learn word embeddings using a feedforward neural network, by predicting a word based on the two words on the left and two words on the right. More recently, Mikolov et al. (2013b) proposed simple log-bilinear models to learn continuous representations of words on very large corpora efficiently.
-Most of these techniques represent each word of the vocabulary by a distinct vector, without parameter sharing. In particular, they ignore the internal structure of words, which is an important limitation for morphologically rich languages, such as Turkish or Finnish. For example, in French or Spanish, most verbs have more than forty different inflected forms, while the Finnish language has fifteen cases for nouns. These languages contain many word forms that occur rarely (or not at all) in the training corpus, making it difficult to learn good word representations. Because many word formations follow rules, it is possible to improve vector representations for morphologically rich languages by using character level information.
-
-In recent years, many methods have been proposed to incorporate morphological information into word representations. To model rare words better, Alexandrescu and Kirchhoff (2006) introduced factored eural language models, where words are represented as sets of features. These features might include morphological information, and this technique as succesfully applied to morphologically rich languages, such as Turkish (Sak et al., 2010). Recently, several works have proposed different composition functions to derive representations of words rom morphemes (Lazaridou et al., 2013; Luong t al., 2013; Botha and Blunsom, 2014; Qiu et l., 2014). These different approaches rely on a orphological decomposition of words.
-
-## Limitations
-
-## Common types of word embeddings with advantages and disadvantages
-
-The first iterations of word embeddings were very simple. They were represented as one-hot vectors, the count of unique vocabulary in the corpus as the length of the vector, and the place in which the vocabulary occurred first as the position in the one-hot vector being a 1. For example, if my vocabulary was the following sentence:
-
-> The boy liked the turtles.
-
-The length of the above sentence is five, but there are four unique words in the vocabulary, "the", "boy", "liked", and "turtles." So the length of our embedding vectors for each would be four. For "the," the embedding would look like `[1, 0, 0, 0]`, the embedding for boy would be `[0, 1, 0, 0]`, the embedding for liked would be `[0, 0, 1, 0]`. The embedding for the next "the" would reuse the one-hot vector embedding used previously, and default to `[1, 0, 0, 0]` for every re-occurrence of "the," and lastly, the embedding for turtles would be `[0, 0, 0, 1]`. But according to the questions we posed earlier, these don't represent any of the features of syntactic or semantic similarity; these only represent the most basic feature of whether or not a word occurred or not. In addition, any calculations or computation that one would like to do with these one-hot vectors would be a problem as the inherent sparsity of these vectors makes it increasingly inefficient as the vocabulary size increases. 
-
-The weight matrices connecting our word-level inputs to the network's hidden layers would each be $v \times h$,
-where $v$ is the size of the vocabulary and $h$ is the size of the hidden layer.
-With 100,000 words feeding into an LSTM layer with $1000$ nodes, the model would need to learn
-$4$ different weight matrices (one for each of the LSTM gates), each with 100 million weights, and thus 400 million parameters in total.
-
-Fortunately, it turns out that a number of efficient techniques
-can quickly discover broadly useful word embeddings in an *unsupervised* manner.
-These embeddings map each word onto a low-dimensional vector $w \in R^d$ with $d$ commonly chosen to be roughly $100$.
-Intuitively, these embeddings are chosen based on the contexts in which words appear.
-Words that appear in similar contexts, like "tennis" and "racquet," should have similar embeddings
-while words that are not alike, like "rat" and "gourmet," should have dissimilar embeddings.
-
-Practitioners of deep learning for NLP typically initialize their models
-using *pre-trained* word embeddings, bringing in outside information, and reducing the number of parameters that a neural network needs to learn from scratch.
-
-To begin, let's first import a few packages that we'll need for this example:
-
-```{.python .input}
-import warnings
-warnings.filterwarnings('ignore')
-
-from mxnet import gluon
-from mxnet import nd
-import gluonnlp as nlp
-import re
-```
-
-## Creating Vocabulary with Word Embeddings
-
-Now we'll demonstrate how to index words,
-attach pre-trained word embeddings for them,
-and use such embeddings in Gluon.
-First, let's assign a unique ID and word vector to each word in the vocabulary
-in just a few lines of code.
-
-
-### Creating Vocabulary from Data Sets
-
-To begin, suppose that we have a simple text data set consisting of newline-separated strings.
-
-```{.python .input}
-text = " hello world \n hello nice world \n hi world \n"
-```
-
-To start, let's implement a simple tokenizer to separate the words and then count the frequency of each word in the data set. We can use our defined tokenizer to count word frequency in the data set.
-
-```{.python .input}
-def simple_tokenize(source_str, token_delim=' ', seq_delim='\n'):
-    return filter(None, re.split(token_delim + '|' + seq_delim, source_str))
-counter = nlp.data.count_tokens(simple_tokenize(text))
-```
-
-The obtained `counter` behaves like a Python dictionary whose key-value pairs consist of words and their frequencies, respectively.
-We can then instantiate a `Vocab` object with a counter.
-Because `counter` tracks word frequencies, we are able to specify arguments
-such as `max_size` (maximum size) and `min_freq` (minimum frequency) to the `Vocab` constructor to restrict the size of the resulting vocabulary.
-
-Suppose that we want to build indices for all the keys in counter.
-If we simply want to construct a  `Vocab` containing every word, then we can supply `counter`  the only argument.
-
-```{.python .input}
-vocab = nlp.Vocab(counter)
-```
-
-A `Vocab` object associates each word with an index. We can easily access words by their indices using the `vocab.idx_to_token` attribute.
-
-```{.python .input}
-for word in vocab.idx_to_token:
-    print(word)
-```
-
-Contrarily, we can also grab an index given a token using `vocab.token_to_idx`.
-
-```{.python .input}
-print(vocab.token_to_idx["<unk>"])
-print(vocab.token_to_idx["world"])
-```
-
-In Gluon NLP, for each word, there are three representations: the index of where it occurred in the original input (idx), the embedding (or vector/vec), and the token (the actual word). At any point, we may use any of the following methods to switch between the three representations: `idx_to_vec`, `idx_to_token`, `token_to_idx`.
-
-### Attaching word embeddings
-
-Our next step will be to attach word embeddings to the words indexed by `vocab`.
-In this example, we'll use *fastText* embeddings trained on the *wiki.simple* dataset.
-First, we'll want to create a word embedding instance by calling `nlp.embedding.create`,
-specifying the embedding type `fasttext` (an unnamed argument) and the source `source='wiki.simple'` (the named argument).
-
-```{.python .input}
-fasttext_simple = nlp.embedding.create('fasttext', source='wiki.simple')
-```
-
-To attach the newly loaded word embeddings `fasttext_simple` to indexed words in `vocab`, we can simply call vocab's `set_embedding` method:
-
-```{.python .input}
-vocab.set_embedding(fasttext_simple)
-```
-
-To see other available sources of pretrained word embeddings using the *fastText* algorithm,
-we can call `text.embedding.list_sources`.
-
-```{.python .input}
-nlp.embedding.list_sources('fasttext')[:5]
-```
-
-The created vocabulary `vocab` includes four different words and a special
-unknown token. Let us check the size of `vocab`.
-
-```{.python .input}
-len(vocab)
-```
-
-By default, the vector of any token that is unknown to `vocab` is a zero vector.
-Its length is equal to the vector dimensions of the fastText word embeddings:
-(300,).
-
-```{.python .input}
-vocab.embedding['beautiful'].shape
-```
-
-The first five elements of the vector of any unknown token are zeros.
-
-```{.python .input}
-vocab.embedding['beautiful'][:5]
-```
-
-Let us check the shape of the embedding of the words 'hello' and 'world' from `vocab`.
-
-```{.python .input}
-vocab.embedding['hello', 'world'].shape
-```
-
-We can access the first five elements of the embedding of 'hello' and 'world' and see that they are non-zero.
-
-```{.python .input}
-vocab.embedding['hello', 'world'][:, :5]
-```
-
-### Using Pre-trained Word Embeddings in Gluon
-
-To demonstrate how to use pre-
-trained word embeddings in Gluon, let us first obtain the indices of the words
-'hello' and 'world'.
-
-```{.python .input}
-vocab['hello', 'world']
-```
-
-We can obtain the vectors for the words 'hello' and 'world' by specifying their
-indices (5 and 4) and the weight or embedding matrix, which we get from calling `vocab.embedding.idx_to_vec` in
-`gluon.nn.Embedding`. We initialize a new layer and set the weights using the layer.weight.set_data method. Subsequently, we pull out the indices 5 and 4 from the weight vector and check their first five entries.
-
-```{.python .input}
-input_dim, output_dim = vocab.embedding.idx_to_vec.shape
-layer = gluon.nn.Embedding(input_dim, output_dim)
-layer.initialize()
-layer.weight.set_data(vocab.embedding.idx_to_vec)
-layer(nd.array([5, 4]))[:, :5]
-```
-
-### Creating Vocabulary from Pre-trained Word Embeddings
-
-We can also create
-vocabulary by using vocabulary of pre-trained word embeddings, such as GloVe.
-Below are a few pre-trained file names under the GloVe word embedding.
-
-```{.python .input}
-nlp.embedding.list_sources('glove')[:5]
-```
-
-For simplicity of demonstration, we use a smaller word embedding file, such as
-the 50-dimensional one.
-
-```{.python .input}
-glove_6b50d = nlp.embedding.create('glove', source='glove.6B.50d')
-```
-
-Now we create vocabulary by using all the tokens from `glove_6b50d`.
-
-```{.python .input}
-vocab = nlp.Vocab(nlp.data.Counter(glove_6b50d.idx_to_token))
-vocab.set_embedding(glove_6b50d)
-```
-
-Below shows the size of `vocab` including a special unknown token.
-
-```{.python .input}
-len(vocab.idx_to_token)
-```
-
-We can access attributes of `vocab`.
-
-```{.python .input}
-print(vocab['beautiful'])
-print(vocab.idx_to_token[71424])
-```
-
-## Applications of Word Embeddings
-
-To apply word embeddings, we need to define
-cosine similarity. Cosine similarity determines the similarity between two vectors.
-
-```{.python .input}
-from mxnet import nd
-def cos_sim(x, y):
-    return nd.dot(x, y) / (nd.norm(x) * nd.norm(y))
-```
-
-The range of cosine similarity between two vectors can be between -1 and 1. The
-larger the value, the larger the similarity between the two vectors.
-
-```{.python .input}
-x = nd.array([1, 2])
-y = nd.array([10, 20])
-z = nd.array([-1, -2])
-
-print(cos_sim(x, y))
-print(cos_sim(x, z))
-```
-
-### Word Similarity
-
-Given an input word, we can find the nearest $k$ words from
-the vocabulary (400,000 words excluding the unknown token) by similarity. The
-similarity between any given pair of words can be represented by the cosine similarity
-of their vectors.
-
-We first must normalize each row, followed by taking the dot product of the entire
-vocabulary embedding matrix and the single word embedding (`dot_prod`).
-We can then find the indices for which the dot product is greatest (`topk`), which happens to be the indices of the most similar words.
-
-```{.python .input}
-def norm_vecs_by_row(x):
-    return x / nd.sqrt(nd.sum(x * x, axis=1) + 1E-10).reshape((-1,1))
-
-def get_knn(vocab, k, word):
-    word_vec = vocab.embedding[word].reshape((-1, 1))
-    vocab_vecs = norm_vecs_by_row(vocab.embedding.idx_to_vec)
-    dot_prod = nd.dot(vocab_vecs, word_vec)
-    indices = nd.topk(dot_prod.reshape((len(vocab), )), k=k+1, ret_typ='indices')
-    indices = [int(i.asscalar()) for i in indices]
-    # Remove unknown and input tokens.
-    return vocab.to_tokens(indices[1:])
-```
-
-Let us find the 5 most similar words to 'baby' from the vocabulary (size:
-400,000 words).
-
-```{.python .input}
-get_knn(vocab, 5, 'baby')
-```
-
-We can verify the cosine similarity of the vectors of 'baby' and 'babies'.
-
-```{.python .input}
-cos_sim(vocab.embedding['baby'], vocab.embedding['babies'])
-```
-
-Let us find the 5 most similar words to 'computers' from the vocabulary.
-
-```{.python .input}
-get_knn(vocab, 5, 'computers')
-```
-
-Let us find the 5 most similar words to 'run' from the given vocabulary.
-
-```{.python .input}
-get_knn(vocab, 5, 'run')
-```
-
-Let us find the 5 most similar words to 'beautiful' from the vocabulary.
-
-```{.python .input}
-get_knn(vocab, 5, 'beautiful')
-```
-
-### Word Analogy
-
-We can also apply pre-trained word embeddings to the word
-analogy problem. For example, "man : woman :: son : daughter" is an analogy.
-This sentence can also be read as "A man is to a woman as a son is to a daughter."
-
-The word analogy completion problem is defined concretely as: for analogy 'a : b :: c : d',
-given the first three words 'a', 'b', 'c', find 'd'. The idea is to find the
-most similar word vector for vec('c') + (vec('b')-vec('a')).
-
-In this example,
-we will find words that are analogous from the 400,000 indexed words in `vocab`.
-dkl
-
-```{.python .input}
-def get_top_k_by_analogy(vocab, k, word1, word2, word3):
-    word_vecs = vocab.embedding[word1, word2, word3]
-    word_diff = (word_vecs[1] - word_vecs[0] + word_vecs[2]).reshape((-1, 1))
-    vocab_vecs = norm_vecs_by_row(vocab.embedding.idx_to_vec)
-    dot_prod = nd.dot(vocab_vecs, word_diff)
-    indices = nd.topk(dot_prod.reshape((len(vocab), )), k=k, ret_typ='indices')
-    indices = [int(i.asscalar()) for i in indices]
-    return vocab.to_tokens(indices)
-```
-
-We leverage this method to find the word to complete the analogy 'man : woman :: son :'.
-
-```{.python .input}
-get_top_k_by_analogy(vocab, 1, 'man', 'woman', 'son')
-```
-
-Let us verify the cosine similarity between vec('son')+vec('woman')-vec('man')
-and vec('daughter').
-
-```{.python .input}
-def cos_sim_word_analogy(vocab, word1, word2, word3, word4):
-    words = [word1, word2, word3, word4]
-    vecs = vocab.embedding[words]
-    return cos_sim(vecs[1] - vecs[0] + vecs[2], vecs[3])
-
-cos_sim_word_analogy(vocab, 'man', 'woman', 'son', 'daughter')
-```
-
-And to perform some more tests, let's try the following analogy: 'beijing : china :: tokyo : '.
-
-```{.python .input}
-get_top_k_by_analogy(vocab, 1, 'beijing', 'china', 'tokyo')
-```
-
-And another word analogy: 'bad : worst :: big : '.
-
-```{.python .input}
-get_top_k_by_analogy(vocab, 1, 'bad', 'worst', 'big')
-```
-
-And the last analogy: 'do : did :: go :'.
-
-```{.python .input}
-get_top_k_by_analogy(vocab, 1, 'do', 'did', 'go')
-```
+Basic Problems in NLP (Notebook 1 & 2)
+
+The best introduction to NLP or Natural Language Processing, is to understand the varieties of problems NLP wishes to solve, their categorical breakdowns, a summary of their previous approaches, and a brief overview of how these problems are tackled currently. In this series of notebooks, we hope to do the following things:
+
+* Understand the fundamental problems in NLP
+* Understand the divisions between the problems in NLP
+* Understand the relationship between NLP and other fields of research
+* Briefly introduce both statistical as well as linguistic approaches to solving a variety of the aforementioned problems
+* And introduce the case study of Machine Translation and the scale of even a single problem in NLP
+
+The fundamental problems in NLP and their respective categories
+
+Natural language processing is frequently subdivided into three main categories: Syntax, Semantics, and Pragmatics.
+
+*Syntax* simply refers to the order or arrangement of words in a sentence such that they are grammatically correct. *Semantics* refers to the meaning that is conveyed by a piece of text.
+*Pragmatics* is a subfield of linguistics that studies the ways in which context contributes to meaning. Unlike semantics, which examines meaning that is conventional or, in linguistic speak, "coded," in a given language, pragmatics studies how the transmission of meaning depends not only on linguistic as well as structural knowledge (vocabulary, grammar, etc.) of the speaker and the listener, but also on the context of the *utterance*, any pre-existing knowledge about those involved, the inferred intent of the speaker, and other factors. In this respect, pragmatics explains how language users are able to overcome *ambiguity*, since meaning relies on the how, where, when, etc. of an utterance.
+
+The following is a list of some of the most commonly researched tasks in natural language processing. Some of these tasks have direct real-world applications, while others more commonly serve as subtasks that are used to aid in solving larger tasks.
+
+
+_*Syntax Tasks*_
+
+Firstly, there are tasks related to syntax. These are the tasks that have to deal with, in essence, the order of words.
+
+* *Lemmatization - *This is the task of removing “inflectional endings” (i.e. -ed, -s, -ing) only and returning the base dictionary form of a word which, in linguistics, is also known as a lemma. This usually is a subtask, greatly aiding in other tasks like grammar induction.
+* *Grammar induction - *A task in which the end product is the generation of a formal grammar that describes a language's syntax; this task usually has multiple underlying pieces that fit together to create the “formal grammar.”
+* *Morphological segmentation - Morphology* is a fancy way of saying the structure of words. Morphological segmentation basically means to separate words into their individual parts, or in linguistic speak, their individual *morphemes*, and identify the “class”, or type, of the morphemes. The difficulty of this task depends greatly on the complexity of the morphology of the language being considered. English has fairly simple morphology, especially inflectional morphology (meaning English doesn’t have many prefixes and suffixes that change the meaning of a word), and thus it is often possible to ignore this task entirely and simply model all possible forms of a word (e.g. "prickle, prickles, prickled, prickling") as separate words. In languages like Turkish and Arabic, however, such an approach is not possible, as each dictionary entry has thousands of possible word forms.
+* *Part-of-speech (POS) tagging - *The task is simple and exactly what it sounds like: given a sentence, determine the part of speech (or POS, for short) for each word in that sentence. Obviously, in English, many words, especially common ones, can serve as multiple parts of speech. For example, "book" can be a noun ("the book on the table") or verb ("to book a hotel"); "bank" can be a noun ("river bank") or verb ("plane banking"); and "in" can be at least four different parts of speech. Some languages have more such ambiguity than others. Languages with little inflectional morphology, such as English, are particularly prone to such ambiguity. Chinese is prone to such ambiguity because it is a tonal language during verbalization. That type of inflection is not easily conveyed through text.
+* *Parsing*
+    * Determine the parse tree (grammatical analysis) of a given sentence. The grammar for natural languages is ambiguous and typical sentences have multiple possible analyses. In fact, perhaps surprisingly, for a typical sentence there may be thousands of potential parses (most of which will seem completely nonsensical to a human). There are two primary types of parsing, Dependency Parsing and Constituency Parsing. Dependency Parsing focuses on the relationships between words in a sentence (marking things like Primary Objects and predicates), whereas Constituency Parsing focuses on building out the Parse Tree using a Probabilistic Context-Free Grammar (PCFG). See also: Stochastic grammar.
+* *Sentence breaking (also known as sentence boundary disambiguation)*
+    * Given a chunk of text, find the sentence boundaries. Sentence boundaries are often marked by periods or other punctuation marks, but these same characters can serve other purposes (e.g. marking abbreviations).
+* *Stemming*
+    * The process of reducing inflected (or sometimes derived) words to their root form. (e.g. "close" will be the root for "closed", "closing", "close", "closer" etc).
+* *Word segmentation*
+    * Separate a chunk of continuous text into separate words. For a language like English, this is fairly trivial, since words are usually separated by spaces. However, some written languages like Chinese, Japanese and Thai do not mark word boundaries in such a fashion, and in those languages text segmentation is a significant task requiring knowledge of the vocabulary and morphology of words in the language. Sometimes this process is also used in cases like Bag of Words (BOW) creation in data mining.
+* *Terminology extraction*
+    * The goal of terminology extraction is to automatically extract relevant terms from a given corpus.
+
+_*Semantic Tasks*_
+
+* *Lexical semantics*
+    * What is the computational meaning of individual words in context?
+* *Distributional semantics*
+    * How can we learn semantic representations from data?
+* *Machine translation*
+    * Automatically translate text from one human language to another. This is one of the most difficult problems, and is a member of a class of problems colloquially termed "AI-complete", i.e. requiring all of the different types of knowledge that humans possess (grammar, semantics, facts about the real world, etc.) in order to solve properly.
+* *Named entity recognition (NER)*
+    * Given a stream of text, determine which items in the text map to proper names, such as people or places, and what the type of each such name is (e.g. person, location, organization). Although capitalization can aid in recognizing named entities in languages such as English, this information cannot aid in determining the type of named entity, and in any case is often inaccurate or insufficient. For example, the first letter of a sentence is also capitalized, and named entities often span several words, only some of which are capitalized. Furthermore, many other languages in non-Western scripts (e.g. Chinese or Arabic) do not have any capitalization at all, and even languages with capitalization may not consistently use it to distinguish names. For example, German capitalizes all nouns, regardless of whether they are names, and French and Spanish do not capitalize names that serve as adjectives.
+* *Natural language generation*
+    * Convert information from computer databases or semantic intents into readable human language.
+* *Natural language understanding*
+    * Convert chunks of text into more formal representations such as first-order logic structures that are easier for computer programs to manipulate. Natural language understanding involves the identification of the intended semantic from the multiple possible semantics which can be derived from a natural language expression which usually takes the form of organized notations of natural language concepts. Introduction and creation of language metamodel and ontology are efficient however empirical solutions. An explicit formalization of natural language semantics without confusions with implicit assumptions such as closed-world assumption (CWA) vs. open-world assumption, or subjective Yes/No vs. objective True/False is expected for the construction of a basis of semantics formalization.
+* *Question answering*
+    * Given a human-language question, determine its answer. Typical questions have a specific right answer (such as "What is the capital of Canada?"), but sometimes open-ended questions are also considered (such as "What is the meaning of life?"). Recent works have looked at even more complex questions.
+* *Recognizing Textual entailment*
+    * Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
+* *Relationship extraction*
+    * Given a chunk of text, identify the relationships among named entities (e.g. who is married to whom).
+* *Sentiment analysis (see also multimodal sentiment analysis)*
+    * Extract subjective information usually from a set of documents, often using online reviews to determine "polarity" about specific objects. It is especially useful for identifying trends of public opinion in the social media, for the purpose of marketing.
+* *Topic segmentation and recognition*
+    * Given a chunk of text, separate it into segments each of which is devoted to a topic, and identify the topic of the segment.
+* *Word sense disambiguation*
+    * Many words have more than one meaning; we have to select the meaning which makes the most sense in context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet.
+* *Automatic summarization *
+    * Produce a readable summary of a chunk of text. Often used to provide summaries of text of a known type, such as research papers, articles in the financial section of a newspaper.
+* *Coreference resolution *
+    * Given a sentence or larger chunk of text, determine which words ("mentions") refer to the same objects ("entities"). Anaphora resolution is a specific example of this task, and is specifically concerned with matching up pronouns with the nouns or names to which they refer. The more general task of coreference resolution also includes identifying so-called "bridging relationships" involving referring expressions. For example, in a sentence such as "He entered John's house through the front door", "the front door" is a referring expression and the bridging relationship to be identified is the fact that the door being referred to is the front door of John's house (rather than of some other structure that might also be referred to).
+* *Discourse analysis*
+    * This rubric includes a number of related tasks. One task is identifying the discourse structure of connected text, i.e. the nature of the discourse relationships between sentences (e.g. elaboration, explanation, contrast). Another possible task is recognizing and classifying the speech acts in a chunk of text (e.g. yes-no question, content question, statement, assertion, etc.).
+
+
+*Pragmatic Tasks*
+
+
+To properly understand what these mean to a practitioner of NLP, we have to fundamentally understand what the goal of NLP actually is and how we approach problems in NLP in general. These challenges require good design techniques; both modular approaches to break a problem up at appropriate points into smaller challenges, and the more formal models which reflect aspects of the structure of language. These problems are different and slightly more challenging because of two main aspects of language: ambiguity and compositionality.
+
+Ambiguity can be referred as the ability of having more than one meaning or being understood in more than one way. Natural languages are ambiguous, so computers are not able to understand language the way people do. Natural Language Processing (NLP) is concerned with the development of computational models of aspects of human language processing. Ambiguity can occur at various levels of NLP. Ambiguity could be Lexical, Syntactic, Semantic, Pragmatic etc.
+
+    * *What is our goal?*
+        * create systems which can perform such applications: an engineering problem
+            * the term "language engineering" is sometimes used to reflect this orientation
+        * natural language processing systems are complex, and require good design techniques
+            * modular approaches to break the problem up at appropriate points
+            * formal models which reflect aspects of the structure of language’
+    * *Why are these problems different?*
+        * ambiguity
+            * The sentence "You have a green light" is ambiguous. Without knowing the context, the identity of the speaker or the speaker's intent, it is difficult to infer the meaning with certainty. For example, it could mean:
+                * the space that belongs to you has green ambient lighting;
+                * you are driving through a green traffic signal;
+                    you no longer have to wait to continue driving;
+                * you are permitted to proceed in a non-driving context;
+                * your body is cast in a greenish glow; or
+                * you possess a light bulb that is tinted green.
+            * Similarly, the sentence "Sherlock saw the man with binoculars" could mean that Sherlock observed the man by using binoculars, or it could mean that Sherlock observed a man who was holding binoculars (syntactic ambiguity). The meaning of the sentence depends on an understanding of the context and the speaker's intent. As defined in linguistics, a sentence is an abstract entity—a string of words divorced from non-linguistic context—as opposed to an utterance, which is a concrete example of a speech act in a specific context. The more closely conscious subjects stick to common words, idioms, phrasings, and topics, the more easily others can surmise their meaning; the further they stray from common expressions and topics, the wider the variations in interpretations. This suggests that sentences do not have intrinsic meaning, that there is no meaning associated with a sentence or word, and that either can only represent an idea symbolically. The cat sat on the mat is a sentence in English. If someone were to say to someone else, "The cat sat on the mat," the act is itself an utterance. This implies that a sentence, term, expression or word cannot symbolically represent a single true meaning; such meaning is underspecified (which cat sat on which mat?) and potentially ambiguous. By contrast, the meaning of an utterance can be inferred through knowledge of both its linguistic and non-linguistic contexts (which may or may not be sufficient to resolve ambiguity). In mathematics, with Berry's paradox, there arises a similar systematic ambiguity with the word "definable".
+
+        * compositionality
+            * Computational semantics often seems like a field divided by methodologies and near-term goals (Cooper 2012). Logical approaches rely on techniques from proof theory and model-theoretic semantics, they have strong ties to linguistic semantics, and they are concerned primarily with inference, ambiguity, vagueness, and compositional interpretation of full syntactic parses (Blackburn & Bos 2003, 2005; van Eijck & Unger 2010). In contrast, statistical approaches derive their tools from algorithms and optimization, and they tend to focus on word meanings and broad notions of semantic content (Landauer et al. 2007; Turney & Pantel 2010). The two types of approaches share the long-term vision of achieving deep natural language understanding, but their day-to-day differences can make them seem unrelated and even incompatible. With the present paper, we seek to show that the distinction between logical and statistical approaches is rapidly disappearing, with the development of models that can learn the conventional aspects of natural language meaning from corpora and databases. These models interpret rich linguistic representations in a compositional fashion, and they offer novel perspectives on foundational issues like ambiguity, inference, and grounding. The fundamental question for these approaches is what kinds of data and models are needed for effective learning. Addressing this question is a prerequisite for implementing robust systems for natural language understanding, and the answers can inform psychological models of language acquisition and language processing. The leading players in our discussion are compositionality and machine learning. After describing our view of linguistic objects (section 2), we introduce these two players (section 3). Although they come from different scientific worlds, we show that they are deeply united around the concepts of generalization, meaning, and structural complexity. The bulk of the paper is devoted to showing how learning-based theories of semantics bring the two worlds together. Specifically, compositionality characterizes the recursive nature of the linguistic ability required to generalize to a creative capacity, and learning details the conditions under which such an ability can be acquired from data. We substantiate this connection first for models in which the semantic representations are logical forms (section 4) and then for models in which the semantic representations are distributed (e.g., vectors; section 5). Historically, distributional approaches have been more closely associated with learning, but we show, building on much previous literature, that both types of representations can be learned. Our focus is on learning general theories of semantics, so we develop the ideas using formal tools that are familiar in linguistics, computer science, and engineering, and that are relatively straightforward to present in limited space: context-free grammars, simple logical representations, linear models, and firstorder optimization algorithms. This focus means that we largely neglect many important, relevant developments in semantic representation (de Marneffe et al. 2006; MacCartney & Manning 2009; van Eijck & Unger 2010; Palmer et al. 2010), semantic interpretation (Dagan et al. 2006; Saur´ı & Pustejovsky 2009), and structured prediction (Baklr et al. 2010; Smith 2011). It’s our hope, though, that our discussion suggests new perspectives on these efforts. (For more general introductions to data-driven approaches to computational semantics, see Ng & Zelle 1997; Jurafsky & Martin 2009: §IV.)
+            * In linguistics, semantic representations are generally logical forms: expressions in a fully specified, unambiguous artificial language. The grammar in table 1 adopts such a view, defining semantic representations with a logical language that has constant symbols for numbers and relations and uses juxtaposition and bracketing to create complex expressions. In the literature, one encounters a variety of different formalisms — for example, lambda calculi (Carpenter 1997) or first-order fragments thereof (Bird et al. 2009), natural logics (MacCartney & Manning 2009; Moss 2009), diagrammatic languages (Kamp & Reyle 1993), programming languages (Blackburn & Bos 2005), robot controller languages (Matuszek et al. 2012b), and database query languages (Zelle & Mooney 1996). A given utterance might be consistent with multiple logical forms in our grammar, creating ambiguity. For instance, the utterance in line B of table 2 also maps to the logical form ¬(+ 3 1), which denotes −4. Intuitively, this happens if “minus” is parsed as taking scope over the addition expression to its right. Similarly, utterance C can be construed with “two times two” as a unit, leading to the logical form (− 2 (× 2 2)), which denotes −2. Utterance D also has an alternative analysis as (+ (+ 2 3) 4), but this ambiguity is spurious in the sense that it has the same denotation as the one in table 1. Our grammar also has one lexical ambiguity — “minus” can pick out a unary or binary relation — but this is immediately resolved in complex structures.
+            * Thus far, we have allowed compositionality and learning to each tell its own story of generalization and productivity. We now show that the two are intimately related. Both concern the ability of a system (human or artificial) to generalize from a finite set of experiences to a creative capacity, and to come to grips with new inputs and experiences effectively. From this perspective, compositionality is a claim about the nature of this ability when it comes to linguistic interpretation, and learning theory offers a framework for characterizing the conditions under which a system can attain this ability in principle. Moreover, establishing the relationship between compositionality and learning provides a recipe for synthesis: the principle of compositionality guides researchers on specific model structures, and machine learning provides them with a set of methods for training such models in practice. More specifically, the claim of compositionality is that being a semantic interpreter for a language L amounts to mastering the syntax of L, the lexical meanings of L, and the modes of semantic combination for L. This also suggests the outlines of a learning task. The theories sketched above suggest a number of ways of refining this task in terms of the triples hu, s, di. We discuss two in detail. The pure semantic parsing task (section 4.1) is to learn an accurate mapping from utterances u to logical forms s. The interpretation task (section 4.2) is to learn an accurate mapping from utterances u to denotations d via latent semantic representations, in effect combining semantic parsing and interpretation. Throughout our review of the two tasks, we rely on the small illustrative example in figure 2. The figure is based around the utterance “two times two plus three”. Candidate semantic representations are given in row (a). The middle candidate y2 contains a lexical pairing that is illicit in the true, target grammar (table 1). This candidate is a glimpse into the unfettered space of logical forms that our learning algorithm needs to explore. Our feature vector counts lexical pairings and inspects the root-level operator, as summarized in the boxes immediately below each candidate. Row (b) of figure 2 describes how the semantic parsing model operates on these candidates, and row (c) does the same for the interpretation model. The next two subsections describe these processes in detail.
+            * Context-free grammars
+                * consists of non-terminal symbols (including a start symbol), terminal symbols, and productions, rewrite operation
+                * derivation = sequence of rewrite operations
+                * language defined by a CFG = sequences of terminal symbols derivable from start symbol
+                * CFG as a device for
+                    * generating sentences
+                    * recognizing sentences
+                    * parsing sentences
+            * natural language grammars typically treat POS as terminal (or pre-terminal) and treat lexical insertion or look-up as a separate process
+            * more powerful than regular expressions / finite-state automata
+                * some languages which can be captured by CFG cannot be captured by regular expressions
+                    * regular expressions can't capture center embedding
+                * even if the language can be captured in principle by a reg. expr., it may not be convenient for expressing relations among constituents
+        * data sparsity?
+
+
+References:
+
+* https://becominghuman.ai/a-simple-introduction-to-natural-language-processing-ea66a1747b32
+* https://en.wikipedia.org/wiki/Pragmatics
+* https://en.wikipedia.org/wiki/Syntax (https://en.wikipedia.org/wiki/Pragmatics)
+* https://en.wikipedia.org/wiki/Semantics (https://en.wikipedia.org/wiki/Pragmatics)
+* Artzi Y, Zettlemoyer LS. 2011. Bootstrapping semantic parsers from conversations. In Proceedings of the 2011 Conference on Empirical Methods in Natural Language Processing. Edinburgh: ACL
+* Artzi Y, Zettlemoyer LS. 2013. Weakly supervised learning of semantic parsers for mapping instructions to actions. Transactions of the Association for Computational Linguistics 1:49–62
+* Baklr G, Hofmann T, Sch¨olkopf B, Smola AJ, Taskar B, eds. 2010. Predicting Structured Data. Cambridge, MA: MIT Press
+* Baroni M, Bernardi R, Do NQ, Shan Cc. 2012. Entailment above the word level in distributional semantics. In Proceedings of the 13th Conference of the European Chapter of the Association for Computational Linguistics. Avignon, France: ACL
+* Berant J, Chou A, Frostig R, Liang P. 2013. Semantic parsing on Freebase from question–answer pairs. In Proceedings of the 2013 Conference on Empirical Methods in Natural Language Processing. Seattle: ACL
+* Berant J, Liang P. 2014. Semantic parsing via paraphrasing. In Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics Human Language Technologies. Baltimore: ACL
+* Bird S, Klein E, Loper E. 2009. Natural Language Processing with Python. Sebastopol, CA: O’Reilly Media Blackburn P, Bos J. 2003. Computational semantics. Theoria 18:27–45
+* Dowty D. 2007. Compositionality as an empirical problem. In Direct Compositionality, eds. C Barker, P Jacobson. Oxford: Oxford University Press, 23–101
+* van Eijck J, Unger C. 2010. Computational Semantics with Functional Programming. Cambridge: Cambridge University Press
+* https://web.stanford.edu/~cgpotts/manuscripts/liang-potts-semantics.pdf
+* http://www.ijircce.com/upload/2014/sacaim/59_Paper%2027.pdf
