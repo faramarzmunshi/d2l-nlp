@@ -254,10 +254,12 @@ And last but not least, are conjunctions. Conjunctions simply link the same part
 
 - noun: I like turtles and raccoons.
 - verb: I sat and read the newspaper.
-- adjective: the girl was both smart and beautiful
-- adverb: the wannabe ninja snuck up on him neither quickly nor quietly.
+- adjective: The girl was both smart and beautiful
+- adverb: The wannabe ninja snuck up on him neither quickly nor quietly.
 
 English is a special case of language. We tend to ignore certain problems by focus on English as the main language. Firstly, text segmentation is not an issue in English at all. In languages like Japanese and Chinese, there's an entire stage of processing for any NLP task which involves segmenting the text into words as a combination of characters. In addition, there's a highly limited morphology in English; one can enter all word forms in a dictionary, because inflectional and derivational morphology are relatively simple. This basically refers to verb tenses, singular/plural words, and nominalization (manipulate -> manipulation). Additionally, English is relatively fixed in its word order; in languages like Arabic or Chinese, there's a freer word order, but even freer word order in languages with case markings.
+
+The other large problem with focusing our efforts on a single language, despite the ease in some ways, is the problem of code switching. Code switching is in essence, language alternation. When most Indian people talk, especially from Northern India, the languages they speak are an amalgamation of two (English and Hindi) to anywhere as many as five or six languages (English, Hindi, Gujurati, Urdu and Memoni) at a time. In mainstream literature, movies, Bollywood, etc., code switching is plethoric. In addition, Latin American countries frequently litter their language with Spanish words and grammatical differences between Spanish and English, or Portugese and English. These all are uniquely human ways of talking, defaulting to the comfortable concept and grammatical structure that is most convenient for the speaker/writer. The issue with this is that without a generalizable model, the above tasks become increasingly more difficult. The grammar then is not set, but is a combination of the multiple languages the speaker or writer chooses to purvey their message. Parsing becomes different. Homonyms and Phonemes (words that sound the same but mean different things, or words with the same spelling but meaning different things) become even more rampant, the grammar is not necessarily set, and some of the well-defined easier to understand concepts we had above become difficult.
 
 ---
 
