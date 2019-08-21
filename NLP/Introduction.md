@@ -291,8 +291,8 @@ In the next notebook, we talk about and code a simple semantic analysis model an
 
 * https://becominghuman.ai/a-simple-introduction-to-natural-language-processing-ea66a1747b32
 * https://en.wikipedia.org/wiki/Pragmatics
-* https://en.wikipedia.org/wiki/Syntax (https://en.wikipedia.org/wiki/Pragmatics)
-* https://en.wikipedia.org/wiki/Semantics (https://en.wikipedia.org/wiki/Pragmatics)
+* https://en.wikipedia.org/wiki/Syntax (https://en.wikipedia.org/wiki/Syntax)
+* https://en.wikipedia.org/wiki/Semantics (https://en.wikipedia.org/wiki/Semantics)
 * Artzi Y, Zettlemoyer LS. 2011. Bootstrapping semantic parsers from conversations. In Proceedings of the 2011 Conference on Empirical Methods in Natural Language Processing. Edinburgh: ACL
 * Artzi Y, Zettlemoyer LS. 2013. Weakly supervised learning of semantic parsers for mapping instructions to actions. Transactions of the Association for Computational Linguistics 1:49–62
 * Baklr G, Hofmann T, Sch¨olkopf B, Smola AJ, Taskar B, eds. 2010. Predicting Structured Data. Cambridge, MA: MIT Press
