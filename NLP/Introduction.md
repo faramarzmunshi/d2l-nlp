@@ -83,7 +83,7 @@ These tasks below relating to semantics or the meanings of words are majority mo
 
   * An example of a non-TE (text does not entail nor contradict) is:<br> __text__: If you help the needy, God will reward you.<br>__hypothesis__: Giving money to a poor man will make you a better person.
 
-<&nbsp><&nbsp><&nbsp><&nbsp>Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
+&nbsp;&nbsp;&nbsp;&nbsp;Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
 
 * **Word sense disambiguation** - Many words have more than one meaning; we have to select the meaning which makes the most sense in context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet.
 
