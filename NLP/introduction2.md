@@ -411,7 +411,7 @@ Indeed, we can feed in any sentence and determine the sentiment with relative ea
 Sentiment analysis is a multi-step process that can in some places be simplified. Using a naive approach would have led to lesser accuracy and a larger amount of subtasks of which we avoided or circumvented by using pre-trained embeddings. We built a Sentiment Analysis by reusing the feature extractor from a pre-trained language model. The modular design of Gluon blocks makes it very easy to put together models for various needs. GluonNLP further enhances these powerful building blocks to substantially simplify the process of constructing efficient data pipelines and versatile models.
 
 ## Exercises
-
+1.
 
 
 ## References
