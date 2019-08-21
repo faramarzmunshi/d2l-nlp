@@ -83,7 +83,7 @@ These tasks below relating to semantics or the meanings of words are majority mo
 
   * An example of a non-TE (text does not entail nor contradict) is:<br> __text__: If you help the needy, God will reward you.<br>__hypothesis__: Giving money to a poor man will make you a better person.
 
-Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
+<&nbsp><&nbsp><&nbsp><&nbsp>Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
 
 * **Word sense disambiguation** - Many words have more than one meaning; we have to select the meaning which makes the most sense in context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet.
 
@@ -272,7 +272,6 @@ The difference is not always clear cut, and each may have different readings ass
 ## Exercises for the reader
 1. Break Machine Translation down into its relative subtasks, and formulate a generic solution on how you'd approach the problem with the amalgamation of other tasks mentioned above.
 2. What's a special aspect of the language which you speak compared to a foreign language you have learned (whether it be English vs Mandarin/English vs Turkish etc.)? Is this a syntactic, semantic, or pragmatic difference between the languages? How could a machine start to decipher the meaning behind these different aspects using the tasks mentioned above?
-3.
 
 ## References:
 
@@ -299,11 +298,11 @@ The difference is not always clear cut, and each may have different readings ass
 
 ## Glossary/Words you should know at the end of these introduction notebooks:
 - semantics
-- Syntax
-- Pragmatics
+- syntax
+- pragmatics
 - inflectional endings
-- Morphology
+- morphology
 - morphemes
-- Part of speech
-- Stemming
+- part of speech
+- stemming
 - lexical
