@@ -1,4 +1,4 @@
-Basic Problems in NLP (Notebook 1 & 2)
+# Basic Problems in NLP (Notebook 1 & 2)
 
 The best introduction to NLP or Natural Language Processing, is to understand the varieties of problems NLP wishes to solve, their categorical breakdowns, a summary of their previous approaches, and a brief overview of how these problems are tackled currently. In this series of notebooks, we hope to do the following things:
 
@@ -18,7 +18,7 @@ Natural language processing is frequently subdivided into three main categories:
 The following is a list of some of the most commonly researched tasks in natural language processing. Some of these tasks have direct real-world applications, while others more commonly serve as subtasks that are used to aid in solving larger tasks.
 
 
-_*Syntax Tasks*_
+##_*Syntax Tasks*_
 
 Firstly, there are tasks related to syntax. These are the tasks that have to deal with, in essence, the order of words.
 
@@ -37,7 +37,7 @@ Firstly, there are tasks related to syntax. These are the tasks that have to dea
 * *Terminology extraction*
     * The goal of terminology extraction is to automatically extract relevant terms from a given corpus.
 
-_*Semantic Tasks*_
+## _*Semantic Tasks*_
 
 * *Lexical semantics*
     * What is the computational meaning of individual words in context?
@@ -71,29 +71,29 @@ _*Semantic Tasks*_
     * This rubric includes a number of related tasks. One task is identifying the discourse structure of connected text, i.e. the nature of the discourse relationships between sentences (e.g. elaboration, explanation, contrast). Another possible task is recognizing and classifying the speech acts in a chunk of text (e.g. yes-no question, content question, statement, assertion, etc.).
 
 
-*Pragmatic Tasks*
+## *Pragmatic Tasks*
 
+
+
+## Ambiguity and compositionality
 
 To properly understand what these mean to a practitioner of NLP, we have to fundamentally understand what the goal of NLP actually is and how we approach problems in NLP in general. These challenges require good design techniques; both modular approaches to break a problem up at appropriate points into smaller challenges, and the more formal models which reflect aspects of the structure of language. These problems are different and slightly more challenging because of two main aspects of language: ambiguity and compositionality.
 
-Ambiguity can be referred as the ability of having more than one meaning or being understood in more than one way. Natural languages are ambiguous, so computers are not able to understand language the way people do. Natural Language Processing (NLP) is concerned with the development of computational models of aspects of human language processing. Ambiguity can occur at various levels of NLP. Ambiguity could be Lexical, Syntactic, Semantic, Pragmatic etc.
+Ambiguity can be referred as the ability of having more than one meaning or being understood in more than one way. Natural languages are ambiguous, so computers are not able to understand language the way people do. Natural Language Processing (NLP) is concerned with the development of computational models of aspects of human language processing. Ambiguity can occur at various levels of NLP. Ambiguity could be Lexical (word-level), Syntactic (dealing with order of words), Semantic (dealing with meaning of words), Pragmatic (dealing with contextual meanings) etc.
 
-    * *What is our goal?*
-        * create systems which can perform such applications: an engineering problem
-            * the term "language engineering" is sometimes used to reflect this orientation
-        * natural language processing systems are complex, and require good design techniques
-            * modular approaches to break the problem up at appropriate points
-            * formal models which reflect aspects of the structure of language’
-    * *Why are these problems different?*
+Here's an example of ambiguity:
         * ambiguity
-            * The sentence "You have a green light" is ambiguous. Without knowing the context, the identity of the speaker or the speaker's intent, it is difficult to infer the meaning with certainty. For example, it could mean:
+The sentence "You have a green light" is ambiguous. Without knowing the context, the identity of the speaker or the speaker's intent, it is difficult to infer the meaning with certainty. For example, it could mean:
                 * the space that belongs to you has green ambient lighting;
                 * you are driving through a green traffic signal;
                     you no longer have to wait to continue driving;
                 * you are permitted to proceed in a non-driving context;
                 * your body is cast in a greenish glow; or
                 * you possess a light bulb that is tinted green.
-            * Similarly, the sentence "Sherlock saw the man with binoculars" could mean that Sherlock observed the man by using binoculars, or it could mean that Sherlock observed a man who was holding binoculars (syntactic ambiguity). The meaning of the sentence depends on an understanding of the context and the speaker's intent. As defined in linguistics, a sentence is an abstract entity—a string of words divorced from non-linguistic context—as opposed to an utterance, which is a concrete example of a speech act in a specific context. The more closely conscious subjects stick to common words, idioms, phrasings, and topics, the more easily others can surmise their meaning; the further they stray from common expressions and topics, the wider the variations in interpretations. This suggests that sentences do not have intrinsic meaning, that there is no meaning associated with a sentence or word, and that either can only represent an idea symbolically. The cat sat on the mat is a sentence in English. If someone were to say to someone else, "The cat sat on the mat," the act is itself an utterance. This implies that a sentence, term, expression or word cannot symbolically represent a single true meaning; such meaning is underspecified (which cat sat on which mat?) and potentially ambiguous. By contrast, the meaning of an utterance can be inferred through knowledge of both its linguistic and non-linguistic contexts (which may or may not be sufficient to resolve ambiguity). In mathematics, with Berry's paradox, there arises a similar systematic ambiguity with the word "definable".
+
+Similarly, the sentence "Sherlock saw the man with binoculars" could mean that Sherlock observed the man by using binoculars, or it could mean that Sherlock observed a man who was holding binoculars (syntactic ambiguity). The meaning of the sentence depends on an understanding of the context and the speaker's intent. As defined in linguistics, a sentence is an abstract entity—a string of words divorced from non-linguistic context—as opposed to an utterance, which is a concrete example of a speech act in a specific context. The more closely conscious subjects stick to common words, idioms, phrasings, and topics, the more easily others can surmise their meaning; the further they stray from common expressions and topics, the wider the variations in interpretations.
+
+This suggests that sentences do not have intrinsic meaning, that there is no meaning associated with a sentence or word, and that either can only represent an idea symbolically. The cat sat on the mat is a sentence in English. If someone were to say to someone else, "The cat sat on the mat," the act is itself an utterance. This implies that a sentence, term, expression or word cannot symbolically represent a single true meaning; such meaning is underspecified (which cat sat on which mat?) and potentially ambiguous. By contrast, the meaning of an utterance can be inferred through knowledge of both its linguistic and non-linguistic contexts (which may or may not be sufficient to resolve ambiguity).
 
         * compositionality
             * Computational semantics often seems like a field divided by methodologies and near-term goals (Cooper 2012). Logical approaches rely on techniques from proof theory and model-theoretic semantics, they have strong ties to linguistic semantics, and they are concerned primarily with inference, ambiguity, vagueness, and compositional interpretation of full syntactic parses (Blackburn & Bos 2003, 2005; van Eijck & Unger 2010). In contrast, statistical approaches derive their tools from algorithms and optimization, and they tend to focus on word meanings and broad notions of semantic content (Landauer et al. 2007; Turney & Pantel 2010). The two types of approaches share the long-term vision of achieving deep natural language understanding, but their day-to-day differences can make them seem unrelated and even incompatible. With the present paper, we seek to show that the distinction between logical and statistical approaches is rapidly disappearing, with the development of models that can learn the conventional aspects of natural language meaning from corpora and databases. These models interpret rich linguistic representations in a compositional fashion, and they offer novel perspectives on foundational issues like ambiguity, inference, and grounding. The fundamental question for these approaches is what kinds of data and models are needed for effective learning. Addressing this question is a prerequisite for implementing robust systems for natural language understanding, and the answers can inform psychological models of language acquisition and language processing. The leading players in our discussion are compositionality and machine learning. After describing our view of linguistic objects (section 2), we introduce these two players (section 3). Although they come from different scientific worlds, we show that they are deeply united around the concepts of generalization, meaning, and structural complexity. The bulk of the paper is devoted to showing how learning-based theories of semantics bring the two worlds together. Specifically, compositionality characterizes the recursive nature of the linguistic ability required to generalize to a creative capacity, and learning details the conditions under which such an ability can be acquired from data. We substantiate this connection first for models in which the semantic representations are logical forms (section 4) and then for models in which the semantic representations are distributed (e.g., vectors; section 5). Historically, distributional approaches have been more closely associated with learning, but we show, building on much previous literature, that both types of representations can be learned. Our focus is on learning general theories of semantics, so we develop the ideas using formal tools that are familiar in linguistics, computer science, and engineering, and that are relatively straightforward to present in limited space: context-free grammars, simple logical representations, linear models, and firstorder optimization algorithms. This focus means that we largely neglect many important, relevant developments in semantic representation (de Marneffe et al. 2006; MacCartney & Manning 2009; van Eijck & Unger 2010; Palmer et al. 2010), semantic interpretation (Dagan et al. 2006; Saur´ı & Pustejovsky 2009), and structured prediction (Baklr et al. 2010; Smith 2011). It’s our hope, though, that our discussion suggests new perspectives on these efforts. (For more general introductions to data-driven approaches to computational semantics, see Ng & Zelle 1997; Jurafsky & Martin 2009: §IV.)
