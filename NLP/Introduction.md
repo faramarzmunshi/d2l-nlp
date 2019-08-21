@@ -75,7 +75,15 @@ The distributional hypothesis suggests that the more semantically similar two wo
 
 These tasks below relating to semantics or the meanings of words are majority modeled on this hypothesis, and only recently have introduced pragmatics (i.e. the contextual meanings vs only context or ordering (syntax) or only meaning (semantics)) into play:
 
-* **Recognizing Textual entailment** - Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
+* **Recognizing Textual entailment** - Entailment is an important concept and word that appears multiple times thoughout NLP literature. Entailment can be illustrated with examples of three different relations:
+
+- An example of a positive TE (text entails hypothesis) is:\n __text__: If you help the needy, God will reward you.\n __hypothesis__: Giving money to a poor man has good consequences.
+
+- An example of a negative TE (text contradicts hypothesis) is: \n __text__: If you help the needy, God will reward you. \n __hypothesis__: Giving money to a poor man has no consequences.
+
+- An example of a non-TE (text does not entail nor contradict) is:\n __text__: If you help the needy, God will reward you.\n__hypothesis__: Giving money to a poor man will make you a better person.
+
+Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
 
 * **Word sense disambiguation** - Many words have more than one meaning; we have to select the meaning which makes the most sense in context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet.
 
@@ -289,13 +297,13 @@ The difference is not always clear cut, and each may have different readings ass
 
 
 
-## Glossary:
-semantics
-Syntax
-Pragmatics
-inflectional endings
-Morphology
-morphemes
-Part of speech
-Stemming
-lexical
+## Glossary/Words you should know at the end of these introduction notebooks:
+- semantics
+- Syntax
+- Pragmatics
+- inflectional endings
+- Morphology
+- morphemes
+- Part of speech
+- Stemming
+- lexical
