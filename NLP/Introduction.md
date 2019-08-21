@@ -83,16 +83,15 @@ These tasks below relating to semantics or the meanings of words are majority mo
 
   * An example of a non-TE (text does not entail nor contradict) is:<br> __text__: If you help the needy, God will reward you.<br>__hypothesis__: Giving money to a poor man will make you a better person.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the
-&nbsp;&nbsp;&nbsp;&nbsp; other to be either true or false.
+&nbsp;&nbsp;&nbsp;&nbsp;Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
 
-* **Word sense disambiguation** - Many words have more than one meaning; we have to select the meaning which makes the most sense in context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet.
+* **Word sense disambiguation** - Many words have more than one meaning; we have to select the meaning which makes the most sense in context. A word's *sense* is the meaning of that particular word in that context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet. The task is to disambiguate between the word senses when given a context.
 
-* **Topic segmentation and recognition** - Given a chunk of text, separate it into segments each of which is devoted to a topic, and identify the topic of the segment.
+* **Topic segmentation and recognition** - Topic segmentation and recognition requires a bit of understanding of the content of the text. The task is, given a chunk of text, separate it into segments each of which is devoted to a topic, and identify the topic of the segment.
 
-* **Relationship extraction** - Given a chunk of text, identify the relationships among named entities (e.g. who is married to whom).
+* **Relationship extraction** - Relationship extraction is similar to entailment, but more generalized. The task is that given a chunk of text, identify the relationships among named entities (e.g. who is married to whom, where the event took place, whose cat is it etc.).
 
-* **Sentiment analysis** - Extract subjective information usually from a set of documents, often using online reviews to determine "polarity" about specific objects. It is especially useful for identifying trends of public opinion in the social media, for the purpose of marketing.
+* **Sentiment analysis** - Sentiment analysis is one of the most basic tasks of NLP and is used constantly as an example because of its varying difficulty depending on the approach. The task is to extract subjective information usually from a set of documents, often using online reviews to determine "polarity" about specific objects. It is especially useful for identifying trends of public opinion in social media, for the purpose of marketing.
 
 * **Machine translation** - This is the task most people think of when it comes to NLP. The task is simple: like Google Translate, automatically translate text from one human language to another. This is one of the most difficult problems, and is a member of a class of problems colloquially termed "AI-complete", i.e. requiring all of the different types of knowledge that humans possess (grammar, semantics, facts about the real world, etc.) in order to properly solve. In the 1950s, machine translation became a reality in research; The Georgetown experiment, which involved successful fully automatic translation of more than sixty Russian sentences into English in 1954, was one of the earliest recorded projects. Researchers of the Georgetown experiment asserted their belief that machine translation would be a solved problem within three to five years. They, as well as most laypersons, underestimated the complexity and the far-reaching consequences of solving this problem, including the number of subtasks that would be required to accurately understand and translate a piece of text. The array of subtasks is left as an exercise to the reader in the exercises section.
 
