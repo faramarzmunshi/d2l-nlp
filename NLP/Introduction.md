@@ -2,11 +2,12 @@
 
 The best introduction to NLP or Natural Language Processing, is to understand the varieties of problems NLP wishes to solve, their categorical breakdowns, a summary of their previous approaches, and a brief overview of how these problems are tackled currently. In this series of notebooks, we hope to do the following things:
 
-* Understand the fundamental problems in NLP
-* Understand the divisions between the problems in NLP
-* Understand the relationship between NLP and other fields of research
-* Briefly introduce both statistical as well as linguistic approaches to solving a variety of the aforementioned problems
-* And introduce the case study of Machine Translation and the scale of even a single problem in NLP
+* Understand the fundamental problems in NLP (check)
+* Understand the divisions between the problems in NLP (check)
+* Understand the relationship between NLP and other fields of research (not done)
+* Briefly introduce both statistical as well as linguistic approaches to solving a variety of the aforementioned problems, the logic behind the solutions, and the unification of the linguistic and statistical approaches (check)
+* Briefly understand the basic syntax and definitions of certain terms with pertinence to the English language
+* Introduce the case study of Sentiment Analysis and the scale of even a single problem in NLP
 
 Words that are *italicized* are special vocabulary words that will be extremely helpful to remember and understand for future NLP work. They are also included in a glossary at the end. There are exercises at the end of this section to help you, the reader, understand and work through a simple NLP example and start formulating basic solutions for these complex problems.
 
@@ -74,26 +75,64 @@ The distributional hypothesis suggests that the more semantically similar two wo
 
 These tasks below relating to semantics or the meanings of words are majority modeled on this hypothesis, and only recently have introduced pragmatics (i.e. the contextual meanings vs only context or ordering (syntax) or only meaning (semantics)) into play:
 
-* **Machine translation** - This is the task most people think of when it comes to NLP. The task is simple: like Google Translate, automatically translate text from one human language to another. This is one of the most difficult problems, and is a member of a class of problems colloquially termed "AI-complete", i.e. requiring all of the different types of knowledge that humans possess (grammar, semantics, facts about the real world, etc.) in order to properly solve. In the 1950s, machine translation became a reality in research; The Georgetown experiment, which involved successful fully automatic translation of more than sixty Russian sentences into English in 1954, was one of the earliest recorded projects. Researchers of the Georgetown experiment asserted their belief that machine translation would be a solved problem within three to five years. They, as well as most laypersons, underestimated the complexity and the far-reaching consequences of solving this problem, including the number of subtasks that would be required to accurately understand and translate a piece of text. The array of subtasks is left as an exercise to the reader in the exercises section.
-
-* **Named entity recognition (NER)**
-    * Given a stream of text, determine which items in the text map to proper names, such as people or places, and what the type of each such name is (e.g. person, location, organization). Although capitalization can aid in recognizing named entities in languages such as English, this information cannot aid in determining the type of named entity, and in any case is often inaccurate or insufficient. For example, the first letter of a sentence is also capitalized, and named entities often span several words, only some of which are capitalized. Furthermore, many other languages in non-Western scripts (e.g. Chinese or Arabic) do not have any capitalization at all, and even languages with capitalization may not consistently use it to distinguish names. For example, German capitalizes all nouns, regardless of whether they are names, and French and Spanish do not capitalize names that serve as adjectives.
-
-* **Natural language generation (NLG)** - This task rears its head as one of the hardest subtasks: NLG refers to the process that transforms structured data into natural language. It can be used to produce long form content for organizations to automate custom reports, as well as produce custom content for a web or mobile application. It can also be used to generate short blurbs of text in interactive conversations, like a chatbot, which might even be read out loud by a text-to-speech system like our Google Home or Amazon Alexa. NLG can be compared to the process humans use when they turn ideas into writing or speech. Psycholinguists prefer the term language production for this process, which can also be described in mathematical terms, or modeled in a computer for psychological research. NLG systems can also be compared to translators of artificial computer languages, such as decompilers or transpilers, which also produce human-readable code generated from an intermediate representation. Human languages, though, tend to be considerably more complex and allow for much more ambiguity and variety of expression than programming languages, which makes NLG increasingly more challenging.
-
-* **Natural language understanding** - Convert chunks of text into more formal representations such as first-order logic structures that are easier for computer programs to manipulate. Natural language understanding involves the identification of the intended semantic from the multiple possible semantics which can be derived from a natural language expression which usually takes the form of organized notations of natural language concepts. Introduction and creation of language metamodel and ontology are efficient however empirical solutions. An explicit formalization of natural language semantics without confusions with implicit assumptions such as closed-world assumption (CWA) vs. open-world assumption, or subjective Yes/No vs. objective True/False is expected for the construction of a basis of semantics formalization.
-
-* **Question answering** - Given a human-language question, determine its answer. Typical questions have a specific right answer (such as "What is the capital of Canada?"), but sometimes open-ended questions are also considered (such as "What is the meaning of life?"). Recent works have looked at even more complex questions.
-
 * **Recognizing Textual entailment** - Given two text fragments, determine if one being true entails the other, entails the other's negation, or allows the other to be either true or false.
 
-* **Relationship extraction** - Given a chunk of text, identify the relationships among named entities (e.g. who is married to whom).
-
-* **Sentiment analysis (see also multimodal sentiment analysis)** - Extract subjective information usually from a set of documents, often using online reviews to determine "polarity" about specific objects. It is especially useful for identifying trends of public opinion in the social media, for the purpose of marketing.
+* **Word sense disambiguation** - Many words have more than one meaning; we have to select the meaning which makes the most sense in context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet.
 
 * **Topic segmentation and recognition** - Given a chunk of text, separate it into segments each of which is devoted to a topic, and identify the topic of the segment.
 
-* **Word sense disambiguation** - Many words have more than one meaning; we have to select the meaning which makes the most sense in context. For this problem, we are typically given a list of words and associated word senses, e.g. from a dictionary or from an online resource such as WordNet.
+* **Relationship extraction** - Given a chunk of text, identify the relationships among named entities (e.g. who is married to whom).
+
+* **Sentiment analysis** - Extract subjective information usually from a set of documents, often using online reviews to determine "polarity" about specific objects. It is especially useful for identifying trends of public opinion in the social media, for the purpose of marketing.
+
+* **Machine translation** - This is the task most people think of when it comes to NLP. The task is simple: like Google Translate, automatically translate text from one human language to another. This is one of the most difficult problems, and is a member of a class of problems colloquially termed "AI-complete", i.e. requiring all of the different types of knowledge that humans possess (grammar, semantics, facts about the real world, etc.) in order to properly solve. In the 1950s, machine translation became a reality in research; The Georgetown experiment, which involved successful fully automatic translation of more than sixty Russian sentences into English in 1954, was one of the earliest recorded projects. Researchers of the Georgetown experiment asserted their belief that machine translation would be a solved problem within three to five years. They, as well as most laypersons, underestimated the complexity and the far-reaching consequences of solving this problem, including the number of subtasks that would be required to accurately understand and translate a piece of text. The array of subtasks is left as an exercise to the reader in the exercises section.
+
+* **Named entity recognition (NER)** - Given a stream of text, determine which items in the text map to proper names, such as people or places, and what the type of each such name is (e.g. person, location, organization). Although capitalization can aid in recognizing named entities in languages such as English, this information cannot aid in determining the type of named entity, and in any case is often inaccurate or insufficient. For example, the first letter of a sentence is also capitalized, and named entities often span several words, only some of which are capitalized. Furthermore, many other languages in non-Western scripts (e.g. Chinese or Arabic) do not have any capitalization at all, and even languages with capitalization may not consistently use it to distinguish names. For example, German capitalizes all nouns, regardless of whether they are names, and French and Spanish do not capitalize names that serve as adjectives.
+
+* **Natural language generation (NLG)** - This task rears its head as one of the hardest subtasks: NLG refers to the process that transforms structured data into natural language. It can be used to produce long form content for organizations to automate custom reports, as well as produce custom content for a web or mobile application. It can also be used to generate short blurbs of text in interactive conversations, like a chatbot, which might even be read out loud by a text-to-speech system like our Google Home or Amazon Alexa. NLG can be compared to the process humans use when they turn ideas into writing or speech. Psycholinguists prefer the term language production for this process, which can also be described in mathematical terms, or modeled in a computer for psychological research. NLG systems can also be compared to translators of artificial computer languages, such as decompilers or transpilers, which also produce human-readable code generated from an intermediate representation. Human languages, though, tend to be considerably more complex and allow for much more ambiguity and variety of expression than programming languages, which makes NLG increasingly more challenging.
+
+* **Natural language understanding (NLU)** - Natural language understanding is another massive topic in NLP. The task is to convert chunks of text into more formal representations like first-order logic structures (not necessarily FOL structures, can be hidden human incomprehensible structures), that are easier for a model from which to pull out information. Natural language understanding involves the identification of the intended semantic from the multiple possible semantics which can be derived from a natural language expression which usually takes the form of organized notations of natural language concepts. In other words, the goal is to understand the intended meaning from the variety of meanings words/phrases can have (ambiguity). Introduction and creation of language metamodel and ontology are efficient but are empirical solutions and aren't generalizable. An explicit formalization of natural language semantics without confusions with implicit assumptions such as closed-world assumption (CWA) vs. open-world assumption, or subjective Yes/No vs. objective True/False is expected for the construction of a basis of semantics formalization.
+
+NLP is the sum of the two aforementioned parts: NLU and NLG. It is quite common to confuse specific terms in this fast-moving field of Machine Learning and Artificial Intelligence. The above is the same case where the three words are interchanged as pleased.
+
+If I need to say it in a mathematical way it could be said as the combination of NLU and NLG will result in an NLP engine that works. NLU is the understanding the meaning of what the user or the input which is given means. That is nothing but the understanding of the text given and classifying it into proper intents.
+
+Let us take an example here: “Can I play cricket today”
+What would the NLP model actually do? Here the user intention is playing cricket but however, there are many possibilities that should be taken into account. One of the dependency would be “Checking the weather outside”.
+If it is raining outside since cricket is an outdoor game we cannot recommend playing right? As you can see we need to get it into structured data here so what do we do? We make use of intent and entities.
+
+**Intents**:
+Intents are nothing but verbs(activities that the user needs to do). If we want to capture a request, or perform an action, use an intent. In the example play is the intent.
+**Entities**:
+Entities are the nouns or the content for the action that needs to be performed. In this case, cricket is a noun.
+It is possible to have multiple intents(like checking the weather, checking ground available, checking friends availability) for a single entity playing and also multiple entities for intent and multiple intents for multiple entities.
+And also the intents and entity change based on the previous chats.
+
+Let's take a simple example of a user and a chatbot conversing about playing cricket:
+
+1. User: Can I play cricket?
+Chatbot: The weather is bad outside, I wouldn't suggest playing cricket right now!
+2. User: What about football?
+Chatbot: The weather is still bad! It might not be wise to play right now.
+3. User: Can I watch cricket?
+Chatbot: Sure, you can watch cricket.
+
+Step 1: The entity is cricket, and the intent is play.
+Step 2: The entity is football, and the intent is play.
+Step 3: the entity is cricket, but the intent now is watch.
+
+So how does NLG, NLU and NLP work together?
+
+NLU takes up the understanding of the data based on grammar, the context in which it was said and decides on intent and entities.
+NLP will convert the text into structured data.
+NLG generates text based on the structured data.
+
+A handy graphic for understanding where some subtasks lay for NLU and NLP will help clarify the differences.
+
+[NLU & NLP tasks][images/NLUvsNLP.jpg]
+
+
+* **Question answering** - Given a human-language question, determine its answer. Typical questions have a specific right answer (such as "What is the capital of Canada?"), but sometimes open-ended questions are also considered (such as "What is the meaning of life?"). Recent works have looked at even more complex questions.
 
 * **Automatic summarization** - Produce a readable summary of a chunk of text. Often used to provide summaries of text of a known type, such as research papers, articles in the financial section of a newspaper.
 
