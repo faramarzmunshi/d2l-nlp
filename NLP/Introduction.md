@@ -245,12 +245,25 @@ The difference is not always clear cut, and each may have different readings ass
 > He appeared to please his teacher [ambiguous]
 > He disappeared to please his teacher [adjunct]
 
+Noun phrase structure is also consistent syntactically for the most part in English. A noun may be modified on the left by a determiner, a quantifier, an adjective, or another noun. In the example "the six big brick walls," the determiner is the first word "the", quantifier is the number "five", the adjective is the descriptor "big", and the other noun "brick." A noun phrase can also have descriptors on the right, with prepositional phrases, appositions, and relative clauses. An example for each is listed below:
 
-    * Code switching (do we want to include this?)
+- Prepositional Phrase: ... the man __on the moon__ ...
+- Apposition: ... Tommy, __the noble knight__, ...
 
-## Sentiment analysis: a case study
+Relative clauses require a bit more explanation. A relative clause is just like a sentence but just with a missing noun phrase. For example "the explorer who found the new country" or "the new country which the man found." The easiest way to understand this is that the gap can be filled with the subject of the larger noun phrase: "The explorer found the new country" where new country could be moved from the beginning of the phrase to the end of the phrase or vice versa swapping in explorer. Reduced relative clauses are other forms of relative clauses that are shortened, where the verb for of "to be" is used in the sentence. For example: "the man who is running in the marathon" can be shortened to "the man running in the marathon." "Is" is the verb form of "to be" here, and allows for this clause to be shortened.
 
-## More on CFGs (context-free grammars)
+And last but not least, are conjunctions. Conjunctions simply link the same parts of speech together to form a more complex, person, place, thing, action, descriptor, etc. It's in essence, the combiner. The words "and", "or", and "but" are all conjunctions and can be used with all parts of speech. There are also the negative versions of these conjunctions with "nor" and "neither."
+
+- noun: I like turtles and raccoons.
+- verb: I sat and read the newspaper.
+- adjective: the girl was both smart and beautiful
+- adverb: the wannabe ninja snuck up on him neither quickly nor quietly.
+
+English is a special case of language. We tend to ignore certain problems by focus on English as the main language. Firstly, text segmentation is not an issue in English at all. In languages like Japanese and Chinese, there's an entire stage of processing for any NLP task which involves segmenting the text into words as a combination of characters. In addition, there's a highly limited morphology in English; one can enter all word forms in a dictionary, because inflectional and derivational morphology are relatively simple. This basically refers to verb tenses, singular/plural words, and nominalization (manipulate -> manipulation). Additionally, English is relatively fixed in its word order; in languages like Arabic or Chinese, there's a freer word order, but even freer word order in languages with case markings.
+
+---
+
+## More on CFGs (context-free grammars) DO WE WANT THIS HERE?
 
             * Context-free grammars
                 * consists of non-terminal symbols (including a start symbol), terminal symbols, and productions, rewrite operation
