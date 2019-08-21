@@ -29,9 +29,9 @@ Firstly, there are tasks related to syntax. These are the tasks that have to dea
 
 * **Stemming** - Stemming refers to the process of reducing inflected words to their root form. (e.g. "burp" will be the root for "burped", "burping", "burp", "burps" etc).
 
-A quick aside to understand the difference between stemming and lemmatization with examples:
+  A quick aside to understand the difference between stemming and lemmatization with examples:
 
-Stemming algorithms work by cutting off the end or the beginning of the word, taking into account a list of common prefixes and suffixes that can be found in an inflected word. This indiscriminate cutting can be successful in some occasions, but not always, and that is why we affirm that this approach presents some limitations. Below we illustrate the method with examples in both English and Spanish.
+  Stemming algorithms work by cutting off the end or the beginning of the word, taking into account a list of common prefixes and suffixes that can be found in an inflected word. This indiscriminate cutting can be successful in some occasions, but not always, and that is why we affirm that this approach presents some limitations. Below we illustrate the method with examples in both English and Spanish.
 
 | **Form** | **Suffix** | **Stem** |
 |----------|:----------:|---------:|
@@ -40,7 +40,7 @@ Stemming algorithms work by cutting off the end or the beginning of the word, ta
 | niñas    |     -as    |      niñ |
 | niñez    |     -ez    |      niñ |
 
-Lemmatization, on the other hand, takes into consideration the morphological analysis of the words. To do so, it is necessary to have detailed dictionaries which the algorithm can look through to link the form back to its lemma. Again, you can see how it works with the same example words.
+  Lemmatization, on the other hand, takes into consideration the morphological analysis of the words. To do so, it is necessary to have detailed dictionaries which the algorithm can look through to link the form back to its lemma. Again, you can see how it works with the same example words.
 
 | **Form** |                  **Morphological Information**                  | **Lemma** |
 |----------|:---------------------------------------------------------------:|----------:|
@@ -49,7 +49,7 @@ Lemmatization, on the other hand, takes into consideration the morphological ana
 | niñas    |         Feminine gender, plural number of the noun niño         |      niño |
 | niñez    |                Singular number of the noun niñez                |     niñez |
 
-First, the stem can be the same for the inflectional forms of different lemmas. This translates into noise in our search results. In fact, it is very common to find entire forms as instances of several lemmas; In Telugu, the form for “robe” is identical to the form for “I don’t share”, so their stems are indistinguishable too. But they, of course, belong to different lemmas. The same happens in Gujarati, where the forms and stems for “beat” and “set up” coincide, but we can separate one from another by looking at their lemmas. Also, the same lemma can correspond to forms with different stems, and we need to treat them as the same word. For example, in Greek, a typical verb has different stems for perfective forms and for imperfective ones. If we were using stemming algorithms, we won't be able to relate them with the same verb, but using lemmatization it is possible to do so.
+  First, the stem can be the same for the inflectional forms of different lemmas. This translates into noise in our search results. In fact, it is very common to find entire forms as instances of several lemmas; In Telugu, the form for “robe” is identical to the form for “I don’t share”, so their stems are indistinguishable too. But they, of course, belong to different lemmas. The same happens in Gujarati, where the forms and stems for “beat” and “set up” coincide, but we can separate one from another by looking at their lemmas. Also, the same lemma can correspond to forms with different stems, and we need to treat them as the same word. For example, in Greek, a typical verb has different stems for perfective forms and for imperfective ones. If we were using stemming algorithms, we won't be able to relate them with the same verb, but using lemmatization it is possible to do so.
 
 * **Morphological segmentation** - *Morphology* is a fancy way of saying the structure of words. Morphological segmentation basically means to separate words into their individual parts, or in linguistic speak, their individual *morphemes*, and identify the “class”, or type, of the morphemes. The difficulty of this task depends greatly on the complexity of the morphology of the language being considered. English has fairly simple morphology, especially inflectional morphology (meaning English doesn’t have many prefixes and suffixes that change the meaning of a word), and thus it is often possible to ignore this task entirely and simply model all possible forms of a word (e.g. "prickle, prickles, prickled, prickling") as separate words. In languages like Turkish and Arabic, however, such an approach is not possible, as each dictionary entry has thousands of possible word forms.
 
