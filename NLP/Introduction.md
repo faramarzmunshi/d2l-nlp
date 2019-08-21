@@ -20,7 +20,6 @@ Natural language processing is frequently subdivided into three main categories:
 
 The following is a list of some of the most commonly researched tasks in natural language processing. Some of these tasks have direct real-world applications, while others more commonly serve as subtasks that are used to aid in solving larger tasks.
 
-
 ### _*Syntax Tasks*_
 
 Firstly, there are tasks related to syntax. These are the tasks that have to deal with, in essence, the order of words.

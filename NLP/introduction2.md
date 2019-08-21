@@ -1,8 +1,8 @@
 # A Sentiment Analysis Case Study
 
-Now that we've covered most of the basics and terminology in NLP, let's continue on with the basics and show how these techniques can help us even when addressing the comparatively simple problem of classification. In particular, we'll look at the classic problem of sentiment analysis: taking an input consisting of a string of text and classifying its sentiment as positive or negative.
+Now that we've covered most of the basics and terminology in NLP, let's continue on with the basics and show how these tasks can pile up even when addressing the comparatively simple problem of classification. In particular, we'll look at the classic problem of sentiment analysis: taking an input consisting of a string of text and classifying its sentiment as positive or negative.
 
-Sentiment analysis is a vital topic in the field of NLP. It has easily become one of the hottest topics in the field because of its relevance and the number of business problems it is solving and has been able to answer. In this notebook, you will cover this not-so-simple topic in a simple way. You will break down all the little mathematics behind it, and you will study it. You will also build a simple sentiment classifier at the end of this tutorial. Specifically, you will cover:
+Sentiment analysis is a vital topic in the field of NLP. It has easily become one of the hottest topics in the field because of its relevance and the number of business problems it is solving and has been able to answer. In this notebook, you will cover this not-so-simple topic in a simple way. You will build a simple sentiment classifier throughout this tutorial. Specifically, you will cover:
 
 - Understanding sentiment analysis from a practitioner's perspective
 - Formulating the problem statement of sentiment analysis
@@ -51,7 +51,7 @@ So, a training set of n labeled documents looks like: `(d1,c1), (d2,c2),...,(dn,
 
 Now, let's move on with the problem formulation and slowly build the intuition behind sentiment classification.
 
-One crucial point you need to keep in mind while working in sentiment analysis is not all the words in a phrase convey the sentiment of the phrase. Words like "I", "Are", "Am", etc. do not contribute to conveying any kind of sentiments and hence, they are not relative in a sentiment classification context. Consider the problem of feature selection here. In feature selection, you try to figure out the most relevant features that relate the most to the class label. That same idea applies here as well. Therefore, only a handful of words in a phrase take part in this and identifying them and extracting them from the phrases prove to be challenging tasks. But don't worry, you will get to that.
+One crucial point you need to keep in mind while working in sentiment analysis is not all the words in a phrase convey the sentiment of the phrase. Words like "I", "Are", "Am", etc. do not contribute to conveying any kind of sentiments and hence, they are not relative in a sentiment classification context. Consider the problem of feature selection here. In feature selection, you try to figure out the most relevant features that relate the most to the class label. That same idea applies here as well. Therefore, only a handful of words in a phrase take part in this and identifying them and extracting them from the phrases prove to be challenging tasks.
 
 In this notebook, we are going to use GluonNLP to build a sentiment analysis model whose weights are initialized based on a pre-trained language model. Using pre-trained language model weights is a common approach for semi-supervised learning in NLP. In order to do a good job with large language modeling on a large corpus of text, our model must learn representations that contain information about the structure of natural language. Intuitively, by starting with these good features, versus simply random features, we're able to converge faster towards a superior model for our downstream task.
 
@@ -65,11 +65,11 @@ Retake a look at the review.
 
 "I absolutely **adore** this movie! It's a bit **sappy**, but with heaps of satirical and next-level **humour**! The dialog was written **fantastically** and the scenes from the main character's adventures are just plain fun. It manages to be both **romantic** and **whimsical** yet gives the viewer a consistent laugh, all while maintaining the conventions of the fairy tale genre. I **would recommend it** to everyone..."
 
-The picture is quite clear. The bolded words are of utmost importance to the perceived sentiment of the review. So what do we do with these words? Well, we use something called word embeddings, of which we'll get into later. The purpose of word embeddings is to represent with a vector, the meaning of the word and relationship between similar and different words geometrically. Given these word vectors, we can assume the words "adore" and "whimsical" and "romantic" would be closer geometrically than the words "bad" and "amazing." This allows us to use all the words in the review for our prediction, giving us a better estimation of the quality and sentiment of reviews than if we performed this with a naive approach. Don't worry too much about the specifics of constructing word embeddings, as that is explained in the next tutorial. This tutorial is meant to show the deconstruction of a larger NLP problem with interactivity and a meaningful result with which you, the reader, can identify and tweak.
+The picture is quite clear. The bolded words are of utmost importance to the perceived sentiment of the review. So what do we do with these words? Well, we use something called word embeddings, of which we'll get into later. The purpose of word embeddings is to represent with a vector, the meaning of the word and semantic and syntactic relationship between similar and different words geometrically. Given these word vectors, we can assume the words "adore" and "whimsical" and "romantic" would be closer geometrically than the words "bad" and "amazing." This allows us to use all the words in the review for our prediction and use a more advanced method of input, giving us a better and more granular estimation of the quality and sentiment of reviews than if we performed this with a naive approach. Don't worry too much about the specifics of constructing word embeddings, as that is explained in the next tutorial. This tutorial is meant to show the deconstruction of a larger NLP problem with interactivity and a meaningful result with which you, the reader, can identify and tweak.
 
 ## Prototyping the model
 
-With GluonNLP, we can quickly prototype a model with infinite customization. The building process consists of just three simple steps. For this notebook, we focus on movie reviews from the Large Movie Review Dataset, also known as the IMDB dataset. Given a movie, our model will output a prediction of its sentiment, either positive or negative.
+With GluonNLP, we can quickly prototype a model with almost infinite customization. The building process consists of just three simple steps. For this notebook, we focus on movie reviews from the Large Movie Review Dataset, also known as the IMDB dataset. Given a movie, our model will output a prediction of its sentiment, either positive or negative.
 
 Firstly, as always, we must import the required modules.
 
@@ -92,7 +92,7 @@ np.random.seed(123)
 mx.random.seed(123)
 ```
 
-So that we can easily transplant the pre-trained weights, we'll base our model architecture on the pre-trained language model (LM). Following the LSTM layer, we have one representation vector for each word in the sentence. Because we plan to make a single prediction (as opposed to one per word), we'll first pool our predictions across time steps before feeding them through a dense last layer to produce our final prediction (a single sigmoid output node).
+So that we can easily transplant the pre-trained weights, we'll base our model architecture on a pre-trained language model. Following the LSTM layer, we have one representation vector for each word in the sentence. Because we plan to make a single prediction (as opposed to one per word), we'll first pool our predictions across time steps before feeding them through a dense last layer to produce our final prediction (a single sigmoid output node).
 
 ![The sentiment analysis model](images/samodel-v3.png)
 
@@ -100,9 +100,9 @@ Specifically, our model represents input words by their embeddings. Following th
 
 Thus, given an input sequence, the memory cells in the LSTM layer will produce a representation sequence. This representation sequence is then averaged over all time steps resulting in a fixed-length sentence representation $h$. Finally, we apply a sigmoid output layer on top of $h$. We’re using the sigmoid activation function because we’re trying to predict if this text has positive or negative sentiment. A sigmoid activation function squashes the output values to the range [0,1], allowing us to interpret this output as a probability, making our lives relatively simpler.
 
-As we are all familiar with LSTMs, we know that we are preserving a fixed amount of context and relative word order with the way this model is constructed. This helps us identify phrases like "would recommend it" versus just looking for the presence of the "recommend" word in the string.
+As we are all familiar with LSTMs, we know that we are preserving a fixed amount of context and relative word order with the way this model is constructed. This helps us identify phrases like "would recommend it" versus just looking for the presence of the "recommend" word in the string as a naive approach would do. The design of a model frequently helps preserve contextual and timing data allowing for a better understanding of the pragmatics and semantics of a piece of text.
 
-Below we define our `MeanPoolingLayer` and basic sentiment analysis network's (`SentimentNet`) structure. Here we also define the input word has to be "embedded" meaning it has to be converted to its geometric form. If we were to perform this without having pre-trained embeddings, we would most likely, as the dataset is small, have to perform stemming first, and individually check for stop words that we can determine the sentiment around. The pre-trained embeddings allow us to just use the out-of-the-box approach and remove these steps that would ordinarily be present in a simpler approach.
+Below we define our `MeanPoolingLayer` and basic sentiment analysis network's (`SentimentNet`) structure. Here we also define the input word has to be "embedded" meaning it has to be converted to its geometric form. If we were to perform this without having pre-trained embeddings, we would most likely (as the dataset is not the largest) have to perform stemming first to have a smaller set of embeddings, and individually check for stop words that we can determine the sentiment around. The pre-trained embeddings allow us to just use the out-of-the-box approach and remove these steps that would ordinarily be present in a more naive approach.
 
 ```{.python .input}
 class MeanPoolingLayer(gluon.HybridBlock):
@@ -167,7 +167,7 @@ context = mx.gpu(0)
 
 For this exercise, we load a pre-trained model with already initialized weights.
 
-The loading of the pre-trained model, like in previous tutorials, is as simple as one line.
+The loading of the pre-trained model is as simple as one line with GluonNLP.
 
 ```{.python .input}
 lm_model, vocab = nlp.model.get_model(name=language_model_name,
@@ -179,9 +179,9 @@ lm_model, vocab = nlp.model.get_model(name=language_model_name,
 
 Next, we create the sentiment analysis model from the pre-trained model.
 
-In the code below, we already have acquire a pre-trained model on the Wikitext-2 dataset using `nlp.model.get_model`. We then construct a SentimentNet object, which takes as input the embedding layer and encoder of the pre-trained model. The embeddings are what we referred to as the geometric representation of the words. We simply are using these representations out of the box for our own purposes.
+In the code below, we already have acquired a pre-trained model on the Wikitext-2 dataset using `nlp.model.get_model`. We then construct a SentimentNet object, which takes as input the embedding layer and encoder of the pre-trained model. The embeddings are what we referred to as the geometric representation of the words. We simply are using these representations out of the box for our own purposes.
 
-As we employ the pre-trained embedding layer and encoder, *we only need to initialize the output layer* using `net.out_layer.initialize(mx.init.Xavier(), ctx=context)`. This, to explain again, removes the need for stemming or lemmatization, allowing us to condense a couple of steps into a more generic embedding and encoding step.
+As we employ the pre-trained embedding layer and encoder, *we only need to initialize the output layer* using `net.out_layer.initialize(mx.init.Xavier(), ctx=context)`. This, to explain again, removes the need for stemming or lemmatization, allowing us to condense a couple of steps into a more generic embedding and encoding step as shown in the diagram of the language model above.
 
 ```{.python .input}
 net = SentimentNet(dropout=dropout)
@@ -196,13 +196,13 @@ As you can see, the actual model portion of this exercise is almost trivial. The
 
 Next, we describe in detail the data pipeline, from initialization to modifying the data for use in our model.
 
-Firstly, we must load the training data.
+Firstly, we must load and preprocess the training data.
 
 In the labeled train/test sets, out of a max score of 10, a negative review has a score of no more than 4, and a positive review has a score of no less than 7. Thus reviews with more neutral ratings are not included in the train/test sets. We labeled a negative review whose score <= 4 as 0, and a
 positive review whose score >= 7 as 1. As the neural ratings are not
 included in the datasets, we can use 5 as our threshold.
 
-Tokenizing is a key part of most NLP tasks. We demonstrate the most easy way to perform this tokenization by using a pre-built Spacy tokenizer out of the box.
+Tokenizing is a key part of most NLP tasks. We demonstrate the most trivial way to perform this tokenization by using a pre-built Spacy tokenizer out of the box. If we had not done that, we would have yet another piece of the puzzle to worry about in this problem.
 
 ```{.python .input}
 # The tokenizer takes as input a string and outputs a list of tokens.
@@ -249,7 +249,7 @@ train_dataset, train_data_lengths = preprocess_dataset(train_dataset)
 test_dataset, test_data_lengths = preprocess_dataset(test_dataset)
 ```
 
-In the following code, we use FixedBucketSampler, which assigns each data sample to a fixed bucket based on its length. The bucket keys are either given or generated from the input sequence lengths and the number of buckets.
+In the following code, we use `FixedBucketSampler`, which assigns each data sample to a fixed bucket based on its length. The bucket keys are either given or generated from the input sequence lengths and the number of buckets.
 
 ```{.python .input}
 # Construct the DataLoader
@@ -286,7 +286,7 @@ train_dataloader, test_dataloader = get_dataloader()
 
 ### Training the model
 
-Now that all the data has been pre-processed and the model architecture has been loosely defined, we can define the helper functions for evaluation and training of the model.
+Now that all the data has been pre-processed and the model architecture has been loosely defined, we can define the helper functions for the evaluation and training of the model.
 
 Here, we define a function `evaluate(net, dataloader, context)` to determine the loss and accuracy of our model in a concise way. The code is very similar to evaluation of other models in the previous tutorials. For more information and explanation of this code, please refer to the the tutorial from GluonNLP indicated here: [LSTM-based Language Models](https://gluon-nlp.mxnet.io/master/examples/language_model/language_model.html).
 
@@ -404,15 +404,15 @@ net(
         shape=(-1, 1)), mx.nd.array([4], ctx=context)).sigmoid()
 ```
 
-Indeed, we can feed in any sentence and determine the sentiment with relative ease! Yet the process in which we got here was multi-stepped and laden with multiple challenges that was solved by different pieces combined from different tasks all mutually lending itself to solving this seemingly simple single task: sentiment sentiment_analysis.
+Indeed, we can feed in any sentence and determine the sentiment with relative ease! Yet the process in which we got here was multi-stepped and laden with multiple challenges that were solved by different pieces combined from different tasks all mutually lending itself to solving this seemingly simple single task: sentiment analysis.
 
 ## Conclusion
 
-Sentiment analysis is a multi-step process that can in some places be simplified. Using a naive approach would have led to lesser accuracy and a larger amount of subtasks of which we avoided or circumvented by using pre-trained embeddings. We built a Sentiment Analysis by reusing the feature extractor from a pre-trained language model. The modular design of Gluon blocks makes it very easy to put together models for various needs. GluonNLP further enhances these powerful building blocks to substantially simplify the process of constructing efficient data pipelines and versatile models.
+Sentiment analysis is a multi-step process that can in some places be simplified. Using a naive approach would have led to lesser accuracy and a larger amount of subtasks of which we avoided or circumvented by using pre-trained embeddings. We built a Sentiment Analysis model by reusing the feature extractor from a pre-trained language model. The modular design of Gluon blocks makes it very easy to put together models for various needs. GluonNLP further enhances these powerful building blocks to substantially simplify the process of constructing efficient data pipelines and versatile models.
 
 ## Exercises
 1. Read the following tutorial on word embeddings, and return here and implement for yourself a BOW model with which you train this sentiment analysis model.
-2. Change the structure of the model to a standard Neural network rather than an LSTM and compare and constrast the quality of the results. Does the context LSTMs naturally give help with the semantic analysis?
+2. Change the structure of the model to a standard Neural network rather than an LSTM and compare and contrast the quality of the results. Does the context LSTMs naturally give help with the semantic analysis?
 
 
 ## References
