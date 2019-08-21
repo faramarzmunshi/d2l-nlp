@@ -411,7 +411,8 @@ Indeed, we can feed in any sentence and determine the sentiment with relative ea
 Sentiment analysis is a multi-step process that can in some places be simplified. Using a naive approach would have led to lesser accuracy and a larger amount of subtasks of which we avoided or circumvented by using pre-trained embeddings. We built a Sentiment Analysis by reusing the feature extractor from a pre-trained language model. The modular design of Gluon blocks makes it very easy to put together models for various needs. GluonNLP further enhances these powerful building blocks to substantially simplify the process of constructing efficient data pipelines and versatile models.
 
 ## Exercises
-1.
+1. Read the following tutorial on word embeddings, and return here and implement for yourself a BOW model with which you train this sentiment analysis model.
+2. Change the structure of the model to a standard Neural network rather than an LSTM and compare and constrast the quality of the results. Does the context LSTMs naturally give help with the semantic analysis?
 
 
 ## References
