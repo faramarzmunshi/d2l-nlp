@@ -67,7 +67,7 @@ First, the stem can be the same for the inflectional forms of different lemmas. 
 
 ### _*Semantic and Pragmatic Tasks*_
 
-There are two main types of semantics when someone says the word Semantics: lexical semantics and distributional semantics. Lexical semantics answers the question of "what is the computational meaning of individual words in context." Distributional semantics is simply concerned with learning semantic representations from the data. The distributional hypothesis in linguistics is derived from the semantic theory of language usage, i.e. words that are used and occur in the same contexts tend to purport similar meanings. The underlying idea is that "a word is characterized by the company it keeps."
+There are two main types of semantics when someone says the word semantics: lexical semantics and distributional semantics. Lexical semantics answers the question of "what is the computational meaning of individual words in context." Distributional semantics is simply concerned with learning semantic representations from the data. The distributional hypothesis in linguistics is derived from the semantic theory of language usage, i.e. words that are used and occur in the same contexts tend to purport similar meanings. The underlying idea is that "a word is characterized by the company it keeps."
 
 The distributional hypothesis is the basis for statistical semantics. In recent years, the distributional hypothesis has provided the basis for the theory of similarity-based generalization in language learning: the idea that children can figure out how to use words they've rarely encountered before by generalizing about their use from distributions of similar words.
 
@@ -95,18 +95,20 @@ These tasks below relating to semantics or the meanings of words are majority mo
 
 NLP is the sum of the two aforementioned parts: NLU and NLG. It is quite common to confuse specific terms in this fast-moving field of Machine Learning and Artificial Intelligence. The above is the same case where the three words are interchanged as pleased.
 
-If I need to say it in a mathematical way it could be said as the combination of NLU and NLG will result in an NLP engine that works. NLU is the understanding the meaning of what the user or the input which is given means. That is nothing but the understanding of the text given and classifying it into proper intents.
+NLP could be referred to as the combination of NLU and NLG will result in an NLP engine that works. NLU is the understanding the meaning of what the user or the input which is given means. That is nothing but the understanding of the text given and classifying it into proper intents.
 
 Let us take an example here: “Can I play cricket today”
 What would the NLP model actually do? Here the user intention is playing cricket but however, there are many possibilities that should be taken into account. One of the dependency would be “Checking the weather outside”.
+
 If it is raining outside since cricket is an outdoor game we cannot recommend playing right? As you can see we need to get it into structured data here so what do we do? We make use of intent and entities.
 
 **Intents**:
-Intents are nothing but verbs(activities that the user needs to do). If we want to capture a request, or perform an action, use an intent. In the example play is the intent.
+Intents are nothing but verbs (activities that the user needs to do). If we want to capture a request, or perform an action, use an intent. In the example "play" is the intent.
 **Entities**:
 Entities are the nouns or the content for the action that needs to be performed. In this case, cricket is a noun.
-It is possible to have multiple intents(like checking the weather, checking ground available, checking friends availability) for a single entity playing and also multiple entities for intent and multiple intents for multiple entities.
-And also the intents and entity change based on the previous chats.
+It is possible to have multiple intents (like checking the weather, checking ground available, checking friends availability) for a single entity playing and also multiple entities for intent and multiple intents for multiple entities. This again arises the issue of ambiguity.
+
+Additionally, the intents and entities can change based on the previous chats.
 
 Let's take a simple example of a user and a chatbot conversing about playing cricket:
 
@@ -114,12 +116,12 @@ Let's take a simple example of a user and a chatbot conversing about playing cri
 Chatbot: The weather is bad outside, I wouldn't suggest playing cricket right now!
 2. User: What about football?
 Chatbot: The weather is still bad! It might not be wise to play right now.
-3. User: Can I watch cricket?
+3. User: Can I watch it at least?
 Chatbot: Sure, you can watch cricket.
 
 Step 1: The entity is cricket, and the intent is play.
 Step 2: The entity is football, and the intent is play.
-Step 3: the entity is cricket, but the intent now is watch.
+Step 3: the entity is football, but the intent now is watch. The entity isn't specifically mentioned but is surmised from the previous conversation. This is one of the keys for NLU.
 
 So how does NLG, NLU and NLP work together?
 
@@ -129,10 +131,12 @@ NLG generates text based on the structured data.
 
 A handy graphic for understanding where some subtasks lay for NLU and NLP will help clarify the differences.
 
-![NLP and NLU](images/NLUvsNLP.jpg)
+![NLP and NLU (source in references)](images/NLUvsNLP.jpg)
 
 
-* **Question answering** - Given a human-language question, determine its answer. Typical questions have a specific right answer (such as "What is the capital of Canada?"), but sometimes open-ended questions are also considered (such as "What is the meaning of life?"). Recent works have looked at even more complex questions.
+* **Question answering** - Question answering is one of the most natural forms of communication a human can have with an entity, whether human or otherwise. The task is given a human-language question, determine its answer; simple in principle, complex in execution. Typical questions have a specific right answer (such as "What is the capital of Canada?"), but sometimes open-ended questions are also considered (such as "What is the meaning of life?").
+
+The remaining tasks are fundamentally a bit different from the rest. The tasks need to take in greater context and require the entire document's informations to make informed decisions.
 
 * **Automatic summarization** - Produce a readable summary of a chunk of text. Often used to provide summaries of text of a known type, such as research papers, articles in the financial section of a newspaper.
 
@@ -175,22 +179,13 @@ Compositionality and learning are intimately related: Both concern the ability o
 
 ## Relationships to other fields
 
-* *Linguistics*
-        * goal of linguistics is to describe language
-            * provide simple models which can predict language behavior
-        * understand what is universal about language
-    * through these formal models, understand how language can be acquired
-    * formal models from linguistics have been of value in NLP, but its goals are not the same as NLP, a single counterexample can invalidate a model as a linguistic theory, but would not significantly lessen its value for NLP
-    * NLP must address all phenomena which arise in an application, while linguistics may focus on select phenomena which give insight into the language faculty
-* *Artificial Intelligence*
-    * classical 'symbolic' AI is concerned primarily with generic problem solving strategies & suitable knowledge representations
-    * there is an inherent link between AI and NLP: some NLP problems require the sort of deep reasoning addressed by these AI methods
-    * but NLP (and AI) has found increasing success through avoiding deep reasoning and turning instead to
-* *Statistics and Machine Learning*
-    * early NLP systems (before 1990) were purely symbolic and hand crafted
-    * statistical methods and models have become more widely used in NLP since the mid 1990's
-    * easily trainable and easily computable models have for some NLP tasks proven much more effective than more complex hand-crafted models; furthermore, they have become more attractive now that lots of training data is available
-    * The past few years have seen the rapid growth of neural network (Deep Learning) models for NLP, achieving better performance than earlier models (e.g. log-linear models)
+To give a small break to the reader, we analyse the relationship NLP has to three key fields: Linguistics, AI, and Statistics.
+
+As evidenced above, NLP is heavily related to linguistics and many of the tasks as well as breakdowns of problems are linguistically based. The terms and definitions for giving language structure have already been well-defined by linguistics. The overall goal of the field is lofty yet simple: to describe language, whether through simple models which can predict language behaviour, or through complex machine learning models that we'll build soon. The goal is to understand what's actually universal about a language, and through these formal models that are usually logic based, understand how language can be acquired. Formal models from linguistics have been of particular value in NLP, yet the goals are not the same as NLP. A single counterexample can invalidate a model in linguistic theory, but wouldn't necessarily lessen its value significantly for NLP. NLP must address all the pheonomena that arise in an application, while linguistics usually may focus on a select set of phenomena to give insight into the language faculty.
+
+NLP and AI are usually interlinked, yet are fundamentally different. A classical "symbolic" AI is concerned primarily with the generic problem solving strategies and suitable knowledge representations for sets of data, and generalization from that set of data. There is an inherent link between AI and NLP as some NLP problems require the sort of deep reasoning addressed by some of these fundamental AI methods; but NLP as well as AI has found more success through avoiding this deep reasoning and instead turning to Statistics.
+
+Machine Learning, or glorified mass-data statistics, started off at a disadvantage for NLP. Previously, the NLP systems that were symbolic and hand-crafted. Statistical models advanced with the era of computation we've had since the 1990's, allowing for easily trainable and easily computable models that are much more complex than the hand-crafted ones we had previously. Furthermore, the plethoric data for NLP in the world combined with the era of computation, has made the growth of neural network or Deep Learning models for NLP increasingly more rapid, each model improving on the performance of the last, especially improving on the earlier models (e.g. the log linear models).
 
 ## Basic syntactic structure of English
 
@@ -290,6 +285,7 @@ Compositionality and learning are intimately related: Both concern the ability o
 * https://web.stanford.edu/~cgpotts/manuscripts/liang-potts-semantics.pdf
 * http://www.ijircce.com/upload/2014/sacaim/59_Paper%2027.pdf
 * https://blog.bitext.com/what-is-the-difference-between-stemming-and-lemmatization/
+* Image from: https://towardsdatascience.com/nlp-vs-nlu-vs-nlg-know-what-you-are-trying-to-achieve-nlp-engine-part-1-1487a2c8b696
 
 
 
