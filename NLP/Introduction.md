@@ -129,7 +129,7 @@ NLG generates text based on the structured data.
 
 A handy graphic for understanding where some subtasks lay for NLU and NLP will help clarify the differences.
 
-[[images/NLUvsNLP.jpg]]
+[[https://github.com/faramarzmunshi/d2l-nlp/blob/master/NLP/images/NLUvsNLP.jpg]]
 
 
 * **Question answering** - Given a human-language question, determine its answer. Typical questions have a specific right answer (such as "What is the capital of Canada?"), but sometimes open-ended questions are also considered (such as "What is the meaning of life?"). Recent works have looked at even more complex questions.
