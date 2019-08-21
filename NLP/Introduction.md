@@ -8,7 +8,8 @@ The best introduction to NLP or Natural Language Processing, is to understand th
 * Briefly introduce both statistical as well as linguistic approaches to solving a variety of the aforementioned problems
 * And introduce the case study of Machine Translation and the scale of even a single problem in NLP
 
-The fundamental problems in NLP and their respective categories
+
+## The fundamental problems in NLP and their respective categories
 
 Natural language processing is frequently subdivided into three main categories: Syntax, Semantics, and Pragmatics.
 
@@ -18,26 +19,29 @@ Natural language processing is frequently subdivided into three main categories:
 The following is a list of some of the most commonly researched tasks in natural language processing. Some of these tasks have direct real-world applications, while others more commonly serve as subtasks that are used to aid in solving larger tasks.
 
 
-## _*Syntax Tasks*_
+### _*Syntax Tasks*_
 
 Firstly, there are tasks related to syntax. These are the tasks that have to deal with, in essence, the order of words.
 
-* *Lemmatization - *This is the task of removing “inflectional endings” (i.e. -ed, -s, -ing) only and returning the base dictionary form of a word which, in linguistics, is also known as a lemma. This usually is a subtask, greatly aiding in other tasks like grammar induction.
-* *Grammar induction - *A task in which the end product is the generation of a formal grammar that describes a language's syntax; this task usually has multiple underlying pieces that fit together to create the “formal grammar.”
-* *Morphological segmentation - Morphology* is a fancy way of saying the structure of words. Morphological segmentation basically means to separate words into their individual parts, or in linguistic speak, their individual *morphemes*, and identify the “class”, or type, of the morphemes. The difficulty of this task depends greatly on the complexity of the morphology of the language being considered. English has fairly simple morphology, especially inflectional morphology (meaning English doesn’t have many prefixes and suffixes that change the meaning of a word), and thus it is often possible to ignore this task entirely and simply model all possible forms of a word (e.g. "prickle, prickles, prickled, prickling") as separate words. In languages like Turkish and Arabic, however, such an approach is not possible, as each dictionary entry has thousands of possible word forms.
-* *Part-of-speech (POS) tagging - *The task is simple and exactly what it sounds like: given a sentence, determine the part of speech (or POS, for short) for each word in that sentence. Obviously, in English, many words, especially common ones, can serve as multiple parts of speech. For example, "book" can be a noun ("the book on the table") or verb ("to book a hotel"); "bank" can be a noun ("river bank") or verb ("plane banking"); and "in" can be at least four different parts of speech. Some languages have more such ambiguity than others. Languages with little inflectional morphology, such as English, are particularly prone to such ambiguity. Chinese is prone to such ambiguity because it is a tonal language during verbalization. That type of inflection is not easily conveyed through text.
-* *Parsing*
-    * Determine the parse tree (grammatical analysis) of a given sentence. The grammar for natural languages is ambiguous and typical sentences have multiple possible analyses. In fact, perhaps surprisingly, for a typical sentence there may be thousands of potential parses (most of which will seem completely nonsensical to a human). There are two primary types of parsing, Dependency Parsing and Constituency Parsing. Dependency Parsing focuses on the relationships between words in a sentence (marking things like Primary Objects and predicates), whereas Constituency Parsing focuses on building out the Parse Tree using a Probabilistic Context-Free Grammar (PCFG). See also: Stochastic grammar.
-* *Sentence breaking (also known as sentence boundary disambiguation)*
-    * Given a chunk of text, find the sentence boundaries. Sentence boundaries are often marked by periods or other punctuation marks, but these same characters can serve other purposes (e.g. marking abbreviations).
-* *Stemming*
-    * The process of reducing inflected (or sometimes derived) words to their root form. (e.g. "close" will be the root for "closed", "closing", "close", "closer" etc).
-* *Word segmentation*
-    * Separate a chunk of continuous text into separate words. For a language like English, this is fairly trivial, since words are usually separated by spaces. However, some written languages like Chinese, Japanese and Thai do not mark word boundaries in such a fashion, and in those languages text segmentation is a significant task requiring knowledge of the vocabulary and morphology of words in the language. Sometimes this process is also used in cases like Bag of Words (BOW) creation in data mining.
-* *Terminology extraction*
-    * The goal of terminology extraction is to automatically extract relevant terms from a given corpus.
+* *Lemmatization* - This is the task of removing “inflectional endings” (i.e. "-ed", "-s", "-ing") only and returning the base dictionary form of a word which, in linguistics, is also known as a lemma. This usually is a subtask, greatly aiding in other tasks like grammar induction. An example of this would be looking at the word "unwavering" and returning "waver" which is the base form of the word.
 
-## _*Semantic Tasks*_
+* *Morphological segmentation* - *Morphology* is a fancy way of saying the structure of words. Morphological segmentation basically means to separate words into their individual parts, or in linguistic speak, their individual *morphemes*, and identify the “class”, or type, of the morphemes. The difficulty of this task depends greatly on the complexity of the morphology of the language being considered. English has fairly simple morphology, especially inflectional morphology (meaning English doesn’t have many prefixes and suffixes that change the meaning of a word), and thus it is often possible to ignore this task entirely and simply model all possible forms of a word (e.g. "prickle, prickles, prickled, prickling") as separate words. In languages like Turkish and Arabic, however, such an approach is not possible, as each dictionary entry has thousands of possible word forms.
+
+* *Part-of-speech (POS) tagging* - The task is simple and exactly what it sounds like: given a sentence, determine the part of speech (or POS, for short) for each word in that sentence. Obviously, in English, many words, especially common ones, can serve as multiple parts of speech. For example, "book" can be a noun ("the book on the table") or verb ("to book a hotel"); "bank" can be a noun ("river bank") or verb ("plane banking"); and "in" can be at least four different parts of speech. Some languages have more of this type of ambiguity than others. Languages with little inflectional morphology (look above for a quick definition), such as English, are particularly prone to such ambiguity. Chinese is prone to such ambiguity because it is a tonal language during verbalization. The tonal type of inflection is not easily conveyed through text, adding to the ambiguity of the sentence.
+
+* *Grammar induction* - A task in which the end product is the generation of a formal grammar that describes a language's syntax; this task usually has multiple underlying pieces that fit together to create the “formal grammar.”
+
+* *Parsing* - This task is relatively difficult and composed of multiple subtasks. The overview is to determine the parse tree or the "grammatical analysis" of a given sentence. This is similar to "diagramming" a sentence; understanding the words, parts of speech, how these fit together, what modifies what, etc. The grammar for natural languages is ambiguous and typical sentences have multiple possible analyses. In fact, perhaps surprisingly, for a typical sentence there may be thousands of potential parses (most of which will seem completely nonsensical to a human). There are two primary types of parsing, Dependency Parsing and Constituency Parsing. Dependency Parsing focuses on the relationships between words in a sentence (marking things like Primary Objects and predicates, whereas Constituency Parsing focuses on building out the Parse Tree using a Probabilistic Context-Free Grammar (PCFGs). 
+
+* *Sentence breaking* - Given a chunk of text, find the sentence boundaries. Sentence boundaries are often marked by periods or other punctuation marks, but these same characters can serve other purposes (e.g. marking abbreviations).
+
+* *Stemming* - The process of reducing inflected (or sometimes derived) words to their root form. (e.g. "close" will be the root for "closed", "closing", "close", "closer" etc).
+
+* *Word segmentation* - Separate a chunk of continuous text into separate words. For a language like English, this is fairly trivial, since words are usually separated by spaces. However, some written languages like Chinese, Japanese and Thai do not mark word boundaries in such a fashion, and in those languages text segmentation is a significant task requiring knowledge of the vocabulary and morphology of the words in the language.
+
+* *Terminology extraction* - The goal of terminology extraction is to automatically extract relevant terms from a given corpus.
+
+### _*Semantic Tasks*_
 
 * *Lexical semantics*
     * What is the computational meaning of individual words in context?
@@ -71,7 +75,7 @@ Firstly, there are tasks related to syntax. These are the tasks that have to dea
     * This rubric includes a number of related tasks. One task is identifying the discourse structure of connected text, i.e. the nature of the discourse relationships between sentences (e.g. elaboration, explanation, contrast). Another possible task is recognizing and classifying the speech acts in a chunk of text (e.g. yes-no question, content question, statement, assertion, etc.).
 
 
-## *Pragmatic Tasks*
+### *Pragmatic Tasks*
 
 
 
