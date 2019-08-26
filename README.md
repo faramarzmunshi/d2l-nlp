@@ -2,6 +2,7 @@
 
 **Notebook 0**: Introduction
   - Syntax, semantics, and pragmatics (definitions, examples of the differences using project gutenburg)
+  - Outline and breakdown of notebooks and how they're structured and what you can find in each
 
 **Notebook 1**: Ambiguity and Compositionality
   - Ambiguity (examples with project gutenburg text) and Compositionality (with code examples of compositionality, again using project gutenburg free texts)
