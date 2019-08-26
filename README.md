@@ -49,4 +49,4 @@
   - easier tokenization and preprocessing, and using pre-trained models to streamline the process
   - show how easy it becomes once all the pieces are in place, and contrast to the simple hand-written model in the first case study
   
-
+**Extra**: Glossary of NLP terms and NLP tasks with brief explanations of each, easily searchable
