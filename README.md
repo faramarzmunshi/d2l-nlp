@@ -10,6 +10,9 @@
   - Lemmatization and Stemming with code and code walkthrough
   - Brief introduction to POS tagging, sentence breaking and other syntax tasks with examples using NLTK (using pre-built functions)
 
+**Notebook 3**: English Syntax and Dissecting English
+  - Talk about English POS, give examples from Project Gutenberg using POS tagging
+
 **Notebook 3**: Data Preparation
   - Understanding data preparation for NLP
     - what needs to be done prior to a task + simple example of tokenization and word and sentence segmentation
