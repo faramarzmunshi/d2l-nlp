@@ -14,6 +14,8 @@
 
 **Notebook 4**: English Syntax and Dissecting English
   - Talk about English POS, give examples from Project Gutenberg using POS tagging
+  - Make the section interactive but give examples and understanding of all types of POS and basic structure of sentences
+    - interactive partitioning of things like noun phrases, complements, etc.
 
 **Notebook 5**: Data Preparation
   - Understanding data preparation for NLP
