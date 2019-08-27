@@ -71,25 +71,32 @@
 
   Exercises:
   
-    1. 
+    1. What are possible avenues for improving these word embeddings?
+    2. Is there any way we can make training time lower? Is it possible to paralellize this training?
+    3. What is the basic purpose of word embeddings?
 
 **Notebook 7**: Parsing
   - Parsing
-    - a worked through example with a combination of use of the aforementioned lemmatization/stemming and other preprocessing steps
+    - a worked through example of building a simple parser with a combination of use of the aforementioned lemmatization/stemming and other preprocessing steps
     - a basic introduction to both dependency and constituency parsing
 
   Exercises:
   
-    1. 
+    1. Describe the difference between dependency and constituency parsing.
+    2. Play with both the constituency parser and dependency parser demos here and here to understand the basics even better: 
+          - https://demo.allennlp.org/dependency-parsing
+          - https://demo.allennlp.org/constituency-parsing
 
 **Notebook 8**: Sentiment Analysis
   - Sentiment Analysis Case Study
     - using basic word embeddings based on frequency matrices 
-    - Putting together Notebook 4 (data prep), Notebook 3 (Lemmatization and stemming), and notebook 5 (semantics/pragmatics) 
+    - using only out of the box python to implement this basic model
 
   Exercises:
   
-    1. 
+    1. How can we improve this basic sentiment analysis model?
+    2. What factors have we not considered using this more naive word embedding implementation? How can we improve the word embedding part?
+    3. What aspects have we neglected? What fundamental ideas are missing from this implementation?
 
 **Notebook 9**: Word Embeddings++ (training and evaluating word embeddings)
   - introduction to semantics/pragmatics and distributional vs distributed word embeddings
@@ -102,7 +109,9 @@
 
   Exercises:
   
-    1. 
+    1. What are the differences and improvements of the word embeddings discussed in this notebook versus the ones discussed in the previous word embedding notebook?
+    2. For your specific native language, if not English, how would word embeddings work? For symbolic languages (Chinese, Thai, Korean etc.)?
+    3. What are other evaluation metrics that we can use to understand the quality of word embeddings? 
 
 **Notebook 10**: Sentiment Analysis++
   - Using new word embeddings and in-built features, demonstrate how sentiment analysis becomes demonstrably better with a better word representation
@@ -111,7 +120,23 @@
 
   Exercises:
 
-    1. 
+    1. Explain how this sentiment analysis model is demonstrably better.
+    2. What steps were we able to skip with better word representations?
+    3. 
   
   
 **Extra**: Glossary of NLP terms and NLP tasks with brief explanations of each, easily searchable
+
+**Chapter Exercises**
+- What are word embeddings and how do they work?
+- How can we simply represent an entire sentence using embeddings?
+- What are the differences between syntax, semantics and pragmatics?
+- What are subwords and character-based embeddings?
+- What's the difference between a distributional and distributed representation?
+- What's the difference between extrinsic and intrinsic evlauations?
+- Model the steps for accomplishing machine translation, including steps for data preparation and the variety of subtasks needed to train a model.
+- What do word similarity metrics and word analogy metrics for word embeddings show us?
+- How do ambiguity and compositionality affect NLP?
+- What are the different types of ambiguity?
+- How can we use compositionality to our advantage?
+
