@@ -53,12 +53,14 @@
     
     2. Code a simple terminology extractor for this notebook. (Hint: all keywords are highlighted/bolded)
 
-**Notebook 5**: Semantics and Pragmatics
-  - Semantics/Pragmatics (struggling to have a good code segment here)
-    - NLU, NLG, NLP (chatbot example, talk about intent and entities, and summarize the main semantic tasks of NLP)
-    - Talk about how the remaining semantic/pragmatic tasks fit into the aforementioned categories
-
+```diff
+- **Notebook 5**: Semantics and Pragmatics (struggling to have a good code segment here and struggling on how to format this notebook)
+  - - Semantics/Pragmatics 
+    - - NLU, NLG, NLP (chatbot example, talk about intent and entities, and summarize the main semantic tasks of NLP)
+    - - Talk about how the remaining semantic/pragmatic tasks fit into the aforementioned categories
+```
   Exercises:
+  
     1. 
 
 **Notebook 6**: Word Embeddings
@@ -66,16 +68,27 @@
   - count based methods, distributional representations
   - training a count-based method and simple distributional representations
 
+  Exercises:
+  
+    1. 
+
 **Notebook 7**: Parsing
   - Parsing
     - a worked through example with a combination of use of the aforementioned lemmatization/stemming and other preprocessing steps
     - a basic introduction to both dependency and constituency parsing
 
+  Exercises:
+  
+    1. 
 
 **Notebook 8**: Sentiment Analysis
   - Sentiment Analysis Case Study
     - using basic word embeddings based on frequency matrices 
     - Putting together Notebook 4 (data prep), Notebook 3 (Lemmatization and stemming), and notebook 5 (semantics/pragmatics) 
+
+  Exercises:
+  
+    1. 
 
 **Notebook 9**: Word Embeddings++ (training and evaluating word embeddings)
   - introduction to semantics/pragmatics and distributional vs distributed word embeddings
@@ -86,9 +99,18 @@
     - word similarity and analogies
     - extrinsic vs intrinsic evaluation
 
+  Exercises:
+  
+    1. 
+
 **Notebook 10**: Sentiment Analysis++
   - Using new word embeddings and in-built features, demonstrate how sentiment analysis becomes demonstrably better with a better word representation
   - easier tokenization and preprocessing, and using pre-trained models to streamline the process
   - show how easy it becomes once all the pieces are in place, and contrast to the simple hand-written model in the first case study
+
+  Exercises:
+
+    1. 
+  
   
 **Extra**: Glossary of NLP terms and NLP tasks with brief explanations of each, easily searchable
