@@ -1,14 +1,14 @@
 # README (TOPICS/TOPIC LIST)
 
-**Notebook 0**: Introduction
+## **Notebook 0**: Introduction
   - Syntax, semantics, and pragmatics (definitions, examples of the differences using project gutenburg)
   - Outline and breakdown of notebooks and how they're structured and what you can find in each
  
-**Notebook 1**: Ambiguity and Compositionality
+## **Notebook 1**: Ambiguity and Compositionality
   - Ambiguity (examples with project gutenburg text) and Compositionality (with code examples of compositionality, again using project gutenburg free texts)
   - Briefly explain how these cause complications for ML with regard to NL
   
-  Exercises:
+#### Exercises:
 
     1. Summarize the types of ambiguity and give a brief explanation of each.
     
@@ -17,7 +17,7 @@
     3. How does compositionality affect meaning and make natural language processing harder?
 
 
-**Notebook 2**: Syntax
+## **Notebook 2**: Syntax
   - Lemmatization and Stemming with code and code walkthrough
   - Brief introduction to POS tagging, sentence breaking and other syntax tasks with examples using NLTK (using pre-built functions)
   
@@ -27,7 +27,7 @@
     
     2. Briefly describe the difference between Lemmatization and Stemming.
 
-**Notebook 3**: English Syntax and Dissecting English
+## **Notebook 3**: English Syntax and Dissecting English
   - Talk about English POS, give examples from Project Gutenberg using POS tagging
   - Make the section interactive but give examples and understanding of all types of POS and basic structure of sentences
     - interactive partitioning of things like noun phrases, complements, etc.
@@ -41,7 +41,7 @@
     
     3. How would you begin to break down this syntax and code it into a machine learning model?
 
-**Notebook 4**: Data Preparation
+## **Notebook 4**: Data Preparation
   - Understanding data preparation for NLP
     - what needs to be done prior to a task + simple example of tokenization and word and sentence segmentation
     - mention of terminology extraction/grammar induction/parsing and how they're more difficult tasks
@@ -64,7 +64,7 @@
   
     1. 
 
-**Notebook 6**: Word Embeddings
+## **Notebook 6**: Word Embeddings
   - Basic word embeddings, CBOW, n-grams, basic statistical properties
   - count based methods, distributional representations
   - training a count-based method and simple distributional representations
@@ -75,7 +75,7 @@
     2. Is there any way we can make training time lower? Is it possible to paralellize this training?
     3. What is the basic purpose of word embeddings?
 
-**Notebook 7**: Parsing
+## **Notebook 7**: Parsing
   - Parsing
     - a worked through example of building a simple parser with a combination of use of the aforementioned lemmatization/stemming and other preprocessing steps
     - a basic introduction to both dependency and constituency parsing
@@ -87,7 +87,7 @@
           - https://demo.allennlp.org/dependency-parsing
           - https://demo.allennlp.org/constituency-parsing
 
-**Notebook 8**: Sentiment Analysis
+## **Notebook 8**: Sentiment Analysis
   - Sentiment Analysis Case Study
     - using basic word embeddings based on frequency matrices 
     - using only out of the box python to implement this basic model
@@ -98,7 +98,7 @@
     2. What factors have we not considered using this more naive word embedding implementation? How can we improve the word embedding part?
     3. What aspects have we neglected? What fundamental ideas are missing from this implementation?
 
-**Notebook 9**: Word Embeddings++ (training and evaluating word embeddings)
+## **Notebook 9**: Word Embeddings++ (training and evaluating word embeddings)
   - introduction to semantics/pragmatics and distributional vs distributed word embeddings
   - coverage of basics of mathematics behind dense word embeddings vs sparse
   - coverage of count-based methods vs prediction-based methods
@@ -113,7 +113,7 @@
     2. For your specific native language, if not English, how would word embeddings work? For symbolic languages (Chinese, Thai, Korean etc.)?
     3. What are other evaluation metrics that we can use to understand the quality of word embeddings? 
 
-**Notebook 10**: Sentiment Analysis++
+## **Notebook 10**: Sentiment Analysis++
   - Using new word embeddings and in-built features, demonstrate how sentiment analysis becomes demonstrably better with a better word representation
   - easier tokenization and preprocessing, and using pre-trained models to streamline the process
   - show how easy it becomes once all the pieces are in place, and contrast to the simple hand-written model in the first case study
@@ -125,9 +125,10 @@
     3. 
   
   
-**Extra**: Glossary of NLP terms and NLP tasks with brief explanations of each, easily searchable
+## **Extras**:
+Glossary of NLP terms and NLP tasks with brief explanations of each, easily searchable
 
-**Chapter Exercises**
+### **Chapter Exercises**
 - What are word embeddings and how do they work?
 - How can we simply represent an entire sentence using embeddings?
 - What are the differences between syntax, semantics and pragmatics?
