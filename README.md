@@ -54,7 +54,8 @@
     2. Code a simple terminology extractor for this notebook. (Hint: all keywords are highlighted/bolded)
 
 ```diff
-!**Notebook 5**: Semantics and Pragmatics (struggling to have a good code segment here and struggling on how to format this notebook)```
+!**Notebook 5**: Semantics and Pragmatics (struggling to have a good code segment here and struggling on how to format this notebook)
+```
   - Semantics/Pragmatics 
     - NLU, NLG, NLP (chatbot example, talk about intent and entities, and summarize the main semantic tasks of NLP)
     - Talk about how the remaining semantic/pragmatic tasks fit into the aforementioned categories
