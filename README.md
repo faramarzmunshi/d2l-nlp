@@ -9,8 +9,11 @@
   - Briefly explain how these cause complications for ML with regard to NL
   
   Exercises:
-    1. Summarize the types of ambiguity and give a brief explanation of each
+
+    1. Summarize the types of ambiguity and give a brief explanation of each.
+    
     2. Give an example of each type of ambiguity not included in this notebook from the text data loaded above.
+    
     3. How does compositionality affect meaning and make natural language processing harder?
 
 
@@ -19,7 +22,9 @@
   - Brief introduction to POS tagging, sentence breaking and other syntax tasks with examples using NLTK (using pre-built functions)
   
   Exercises:
+
     1. Code your own tool for sentence breaking using only out of the box Python functions.
+    
     2. Briefly describe the difference between Lemmatization and Stemming.
 
 **Notebook 3**: English Syntax and Dissecting English
@@ -28,9 +33,12 @@
     - interactive partitioning of things like noun phrases, complements, etc.
 
   Exercises:
+  
     1. Label all the parts of speech of the following sentence and identify the noun phrase, predicate, complement, and prepositional phrases along with their objects. ..
     "Suzy was determined to eat the lamb chop; her fork and knife were primed and gripped tightly in her hands, after which she dove in and did not look up once from her meal."
+    
     2. Give examples of every part of speech with an excerpt from the text we loaded in this section.
+    
     3. How would you begin to break down this syntax and code it into a machine learning model?
 
 **Notebook 4**: Data Preparation
@@ -40,7 +48,9 @@
     
     
   Exercises:
+  
     1. What is a key difference between certain symbolic languages (Chinese, Japanese, Thai etc.) and English when it comes to data preparation and preprocessing?
+    
     2. Code a simple terminology extractor for this notebook. (Hint: all keywords are highlighted/bolded)
 
 **Notebook 5**: Semantics and Pragmatics
