@@ -67,6 +67,7 @@
     - word similarity and analogies
   - Logical walkthrough of why the evaluation metrics invalidate/date some of the simpler word embedding concepts
   - SVD, LSA, PCA as a solution to compact the word embeddings and dealing with the sparsity problem
+  - Fasttext embeddings and sub-word embeddings.
   - Issue with bias in word embeddings and how to "debias" Word Embeddings
   - Systematic improvements for faster training
     - Introduction to parallel training
@@ -104,6 +105,7 @@
     - batching
     - lemmatization/stemming
     - word and sentence segmentation
+    - BPE
   - Talk about the task of sentiment analysis and the challenges that need to be resolved before accomplishing this task from the basic word embedding information gleaned from this section
   - Comparison of BOW + Word2Vec vs TF-IDF + Word2Vec vs CNN + Word2Vec vs RNN+Word2Vec for the task of sentiment analysis
   - complete walkthrough of using all of these different methods for sentiment analysis and understanding sentence level context and embeddings
@@ -147,11 +149,11 @@
   - Demonstrate complications, and the solutions:
     - Smoothing
     - Backoff
-  - Char/BPE/Word level embeddings, and the effect on the language model
+  - Char/subword/Word level embeddings, and the effect on the language model
 
 #### Exercises:
     
-    1. Construct an n-gram model with all of the bells and whistles of smoothing and backoff but using character level embeddings. How much better or worse does this perform compared to the simple models? Using BPE/sub-word embeddings, do you do better or worse?
+    1. Construct an n-gram model with all of the bells and whistles of smoothing and backoff but using character level embeddings. How much better or worse does this perform compared to the simple models? Using sub-word embeddings, do you do better or worse?
 
     2. How can we improve these language models? Are there any simple improvements that will change the outcome of the models?
     
