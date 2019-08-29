@@ -4,8 +4,9 @@
   - Outline and breakdown of notebooks and how they're structured and what you can find in each
   - Introduction to Syntax, semantics, and pragmatics (definitions, examples of the differences using project gutenburg)
     - include references to English syntax and a brief overview of the key terminologies with regards to English syntax with examples using code to extract them
+    - Outline POS, phrase structure etc.
   - Ambiguity (examples with project gutenburg text) and Compositionality (with code examples of compositionality, again using project gutenburg free texts)
-  - Briefly explain how these cause complications for ML with regard to NL
+  - Briefly explain how these cause complications for ML with regard to NL with demonstrable examples from the Gutenberg texts
   
 #### Exercises:
 
@@ -33,10 +34,11 @@
 
 ## Notebook 2: The Basics of Word Embeddings
   - Why do we use word embeddings?
-  - Distributed vs Distributional embeddings
-  - Walkthrough of getting to Word2Vec and GLoVe embeddings
-  - Count-based methods of Word Embeddings
-  - simple training walkthrough for word embeddings
+  - The difference between Distributed and Distributional embeddings
+  - An easy way of approaching word embeddings using count-based methods
+  - Walkthrough of simple one-hot representations, building till we get to Word2Vec and GLoVe embeddings
+  - simple walkthrough of training your own word embedding using a given corpora
+    - followed by using GluonNLP for a simple OOTB approach for retrieving WE
   
 #### Exercises:
   
@@ -65,6 +67,10 @@
     - word similarity and analogies
   - Logical walkthrough of why the evaluation metrics invalidate/date some of the simpler word embedding concepts
   - SVD, LSA, PCA as a solution to compact the word embeddings and dealing with the sparsity problem
+  - Issue with bias in word embeddings and how to "debias" Word Embeddings
+  - Systematic improvements for faster training
+    - Introduction to parallel training
+    - Softmax approximations
  
 
 #### Exercises:
@@ -93,13 +99,14 @@
 ---
 
 ## Notebook 4: Data Preparation for NLP and Sentence-level Embeddings
-  - Data preparation tools
+  - Introduce the data preparation tools and simple implementations along with their respective complications
     - tokenization
     - batching
     - lemmatization/stemming
     - word and sentence segmentation
-  - BOW + Word2Vec vs TF-IDF + Word2Vec vs CNN + Word2Vec vs RNN+Word2Vec for the task of sentiment analysis
-  - complete walkthrough of using all of these different methods for sentiment analysis and understanding sentence level context
+  - Talk about the task of sentiment analysis and the challenges that need to be resolved before accomplishing this task from the basic word embedding information gleaned from this section
+  - Comparison of BOW + Word2Vec vs TF-IDF + Word2Vec vs CNN + Word2Vec vs RNN+Word2Vec for the task of sentiment analysis
+  - complete walkthrough of using all of these different methods for sentiment analysis and understanding sentence level context and embeddings
   
   
 #### Exercises:
@@ -134,8 +141,13 @@
 ---
 
 ## Notebook 5: Language Models
-  - Smoothing
-  - Char/BPE/Word level embeddings
+  - Construction of simple N-gram (Unigram + bigram) models
+    - Introduce the concept of evaluation and metrics (Likelihood and Perplexity)
+  - Simple feed-forward NN Language model building
+  - Demonstrate complications, and the solutions:
+    - Smoothing
+    - Backoff
+  - Char/BPE/Word level embeddings, and the effect on the language model
 
 #### Exercises:
     
@@ -152,6 +164,8 @@
     2. A Neural Probabilistic Language Model. (Bengio et al. 2003, JMLR) |  http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
 
     3. Using the Output Embedding. (Press and Wolf 2016) | https://arxiv.org/pdf/1608.05859.pdf
+    
+    4. Discourse Language Models (Chaturvedi et al. 2017) | http://www.aclweb.org/anthology/D17-1168
 
 ---
 ---
