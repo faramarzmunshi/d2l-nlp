@@ -9,16 +9,16 @@
   
 #### Exercises:
 
-  1. Summarize the types of ambiguity and give a brief explanation of each.
+    1. Summarize the types of ambiguity and give a brief explanation of each.
 
-  2. Give an example of each type of ambiguity not included in this notebook from the text data loaded above.
+    2. Give an example of each type of ambiguity not included in this notebook from the text data loaded above.
 
-  3. How does compositionality affect meaning and make natural language processing harder?
-  
-  4. Label all the parts of speech of the following sentence and identify the noun phrase, predicate, complement, and prepositional phrases along with their objects. ..
-"Suzy was determined to eat the lamb chop; her fork and knife were primed and gripped tightly in her hands, after which she dove in and did not look up once from her meal."
+    3. How does compositionality affect meaning and make natural language processing harder?
 
-  5. Give examples of every part of speech with an excerpt from the text we loaded in this section.
+    4. Label all the parts of speech of the following sentence and identify the noun phrase, predicate, complement, and prepositional phrases along with their objects. ..
+  "Suzy was determined to eat the lamb chop; her fork and knife were primed and gripped tightly in her hands, after which she dove in and did not look up once from her meal."
+
+    5. Give examples of every part of speech with an excerpt from the text we loaded in this section.
 
 
 ## Notebook 2: Word2Vec + Other basic word embedding models
@@ -82,9 +82,9 @@
 #### Exercises:
     
     1.
-    
+
     2.
-    
+
     3. 
     
 ## **Extras**:
