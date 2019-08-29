@@ -20,6 +20,7 @@
 
     5. Give examples of every part of speech with an excerpt from the text we loaded in this section.
 
+---
 
 ## Notebook 2: Word2Vec + Other basic word embedding models
   - Why do we use word embeddings?
