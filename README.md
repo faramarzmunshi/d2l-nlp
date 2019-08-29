@@ -20,6 +20,14 @@
 
     5. Give examples of every part of speech with an excerpt from the text we loaded in this section.
 
+### Reference Papers
+    
+    1.
+
+    2.
+
+    3. 
+
 ---
 
 ## Notebook 2: Word2Vec + Other basic word embedding models
@@ -39,6 +47,15 @@
     
     4. What is the basic purpose of word embeddings?
     
+### Reference Papers
+    
+    1. Wordnet | https://wordnet.princeton.edu/
+
+    2. 
+
+    3. Linguistic Regularities in Continuous Representations (Mikolov et al. 2013) | http://aclweb.org/anthology/N13-1090
+    
+---
 
 ## Notebook 3: Evaluation of word embeddings and Improvements on Word Embeddings with the introduction of sub-words
   - Evaluation metrics
@@ -53,6 +70,24 @@
     1. What are the differences and improvements of the word embeddings discussed in this notebook versus the ones discussed in the previous word embedding notebook?
     
      2. What are other evaluation metrics that we can use to understand the quality of word embeddings? How has that influenced the start of sub-word embeddings? How do those differ from normal word embeddings?
+
+### Reference Papers
+    
+    1. Evaluating Word Embeddings (Schnabel et al. 2015) | http://aclweb.org/anthology/D15-1036
+
+    2. Character-based Embeddings (Ling et al. 2015) | http://aclweb.org/anthology/D15-1176
+
+    3. Subword-based Embeddings (Bojankowski et al. 2017) | http://aclweb.org/anthology/Q/Q17/Q17-1010.pdf
+    
+    4. Cross-lingual Embeddings (Faruqui et al. 2014) | http://aclweb.org/anthology/E/E14/E14-1049.pdf
+    
+    5. Sparse Word Embeddings (Murphy et al. 2012) | http://aclanthology.info/pdf/C/C12/C12-1118.pdf
+    
+    6. De-biasing Word Embeddings (Bolukbasi et al. 2016) | https://papers.nips.cc/paper/6228-man-is-to-computer-programmer-as-woman-is-to-homemaker-debiasing-word-embeddings.pdf
+    
+    7. Morphology-based Embeddings (Luong et al. 2013) | http://aclweb.org/anthology/W/W13/W13-3512.pdf
+
+---
 
 ## Notebook 4: Sentence level embeddings and data preparation for NLP
   - Data preparation tools
@@ -76,6 +111,24 @@
     
     5. Redo sentiment analysis with one of the models (BOW/CNN/TF-IDF/RNNs) but use a more complex word embedding; how does this affect the results?
 
+### Reference Papers
+    
+    1. Convolutional Neural Networks (LeCun et al. 1998) | http://www.cs.nyu.edu/~yann/2008f-G22-2565-001/diglib/lecun-98.pdf
+
+    2. CNNs for Text (Collobert and Weston 2011) | https://arxiv.org/pdf/1103.0398.pdf
+
+    3. CNN for Modeling Sentences (Kalchbrenner et al. 2014) | http://aclweb.org/anthology/P/P14/P14-1062.pdf
+    
+    4. Learning Syntax from Translation (Shi et al. 2016) | http://aclweb.org/anthology/D/D16/D16-1159.pdf
+    
+    5. Learning Sentiment from LMs (Radford et al. 2017) | https://arxiv.org/pdf/1704.01444.pdf
+    
+    6. Semantic Relatedness (Marelli et al. 2014) | http://www.lrec-conf.org/proceedings/lrec2014/pdf/363_Paper.pdf
+    
+    7. Techniques and Applications for Sentiment Analysis (Feldman et. al 2013) | https://cacm.acm.org/magazines/2013/4/162501-techniques-and-applications-for-sentiment-analysis/abstract
+
+---
+
 ## Notebook 5: Language Models
   - Smoothing
   - Char/BPE/Word level embeddings
@@ -87,6 +140,15 @@
     2.
 
     3. 
+    
+### Reference Papers
+    
+    1. Maximum entropy (log-linear) language models. (Rosenfeld 1996) | http://repository.cmu.edu/cgi/viewcontent.cgi?article=2337&context=compsci
+
+    2. A Neural Probabilistic Language Model. (Bengio et al. 2003, JMLR) |  http://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
+
+    3. Using the Output Embedding. (Press and Wolf 2016) | https://arxiv.org/pdf/1608.05859.pdf
+
     
 ## **Extras**:
 Glossary of NLP terms and NLP tasks with brief explanations of each, easily searchable
