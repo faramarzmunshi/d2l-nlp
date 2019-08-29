@@ -23,11 +23,13 @@
 
 #### Reference Papers/Links
     
-    1.
+    1. Ambiguities in Natural Language Processing (Anjali et al, 2014) | http://www.ijircce.com/upload/2014/sacaim/59_Paper%2027.pdf
 
-    2.
+    2. https://www.nlpworld.co.uk/nlp-glossary/a/ambiguity/
 
-    3. 
+    3. https://en.wikipedia.org/wiki/Principle_of_compositionality
+    
+    4. https://plato.stanford.edu/entries/compositionality/
 
 ---
 ---
@@ -54,9 +56,7 @@
     
     1. Wordnet | https://wordnet.princeton.edu/
 
-    2. 
-
-    3. Linguistic Regularities in Continuous Representations (Mikolov et al. 2013) | http://aclweb.org/anthology/N13-1090
+    2. Linguistic Regularities in Continuous Representations (Mikolov et al. 2013) | http://aclweb.org/anthology/N13-1090
     
 ---
 ---
@@ -77,7 +77,7 @@
   
     1. What are the differences and improvements of the word embeddings discussed in this notebook versus the ones discussed in the previous word embedding notebook?
     
-     2. What are other evaluation metrics that we can use to understand the quality of word embeddings? How has that influenced the start of sub-word embeddings? How do those differ from normal word embeddings?
+    2. What are other evaluation metrics that we can use to understand the quality of word embeddings? How has that influenced the start of sub-word embeddings? How do those differ from normal word embeddings?
 
 ### Reference Papers
     
@@ -151,11 +151,9 @@
 
 #### Exercises:
     
-    1.
+    1. Construct an n-gram model with all of the bells and whistles of smoothing and backoff but using character level embeddings. How much better or worse does this perform compared to the simple models? Using BPE/sub-word embeddings, do you do better or worse?
 
-    2.
-
-    3. 
+    2. How can we improve these language models? Are there any simple improvements that will change the outcome of the models?
     
 ### Reference Papers
     
