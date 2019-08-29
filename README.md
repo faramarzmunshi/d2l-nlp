@@ -1,6 +1,6 @@
 # README (TOPICS/TOPIC LIST)
 
-## Notebook 1: Linguistic concepts and intro
+## Notebook 1: An Introduction to NLP and Core Linguistic Concepts
   - Outline and breakdown of notebooks and how they're structured and what you can find in each
   - Introduction to Syntax, semantics, and pragmatics (definitions, examples of the differences using project gutenburg)
     - include references to English syntax and a brief overview of the key terminologies with regards to English syntax with examples using code to extract them
@@ -31,7 +31,7 @@
 ---
 ---
 
-## Notebook 2: Word2Vec + Other basic word embedding models
+## Notebook 2: The Basics of Word Embeddings
   - Why do we use word embeddings?
   - Distributed vs Distributional embeddings
   - Walkthrough of getting to Word2Vec and GLoVe embeddings
@@ -59,7 +59,7 @@
 ---
 ---
 
-## Notebook 3: Evaluation of word embeddings and Improvements on Word Embeddings with the introduction of sub-words
+## Notebook 3: Word Embedding Evaluation and Improvement
   - Evaluation metrics
     - intrinsic vs Extrinsic + qualitative vs quantitative
     - word similarity and analogies
@@ -92,7 +92,7 @@
 ---
 ---
 
-## Notebook 4: Sentence level embeddings and data preparation for NLP
+## Notebook 4: Data Preparation for NLP and Sentence-level Embeddings
   - Data preparation tools
     - tokenization
     - batching
