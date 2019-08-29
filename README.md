@@ -20,7 +20,7 @@
 
     5. Give examples of every part of speech with an excerpt from the text we loaded in this section.
 
-### Reference Papers
+#### Reference Papers/Links
     
     1.
 
@@ -28,6 +28,7 @@
 
     3. 
 
+---
 ---
 
 ## Notebook 2: Word2Vec + Other basic word embedding models
@@ -55,6 +56,7 @@
 
     3. Linguistic Regularities in Continuous Representations (Mikolov et al. 2013) | http://aclweb.org/anthology/N13-1090
     
+---
 ---
 
 ## Notebook 3: Evaluation of word embeddings and Improvements on Word Embeddings with the introduction of sub-words
@@ -87,6 +89,7 @@
     
     7. Morphology-based Embeddings (Luong et al. 2013) | http://aclweb.org/anthology/W/W13/W13-3512.pdf
 
+---
 ---
 
 ## Notebook 4: Sentence level embeddings and data preparation for NLP
@@ -128,6 +131,7 @@
     7. Techniques and Applications for Sentiment Analysis (Feldman et. al 2013) | https://cacm.acm.org/magazines/2013/4/162501-techniques-and-applications-for-sentiment-analysis/abstract
 
 ---
+---
 
 ## Notebook 5: Language Models
   - Smoothing
@@ -149,6 +153,8 @@
 
     3. Using the Output Embedding. (Press and Wolf 2016) | https://arxiv.org/pdf/1608.05859.pdf
 
+---
+---
     
 ## **Extras**:
 Glossary of NLP terms and NLP tasks with brief explanations of each, easily searchable
