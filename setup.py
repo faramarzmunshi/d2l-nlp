@@ -6,7 +6,9 @@ requirements = [
     'jupyter',
     'numpy',
     'matplotlib',
-    'pandas'
+    'pandas',
+    'gutenberg',
+    'pprint'
 ]
 
 # don't import d2l to get __version__ since it has deps
