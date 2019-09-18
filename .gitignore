@@ -1,2 +1,6 @@
 
 .DS_Store
+chapter_NLP/data/imdb/test.json
+chapter_NLP/data/imdb/train.json
+chapter_NLP/.ipynb_checkpoints/7 Word Analogies and Similarity-checkpoint.ipynb
+chapter_NLP/.ipynb_checkpoints/5 Word2Vec with GluonNLP and Sentiment Analysis-checkpoint.md

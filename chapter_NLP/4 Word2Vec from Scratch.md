@@ -148,7 +148,7 @@ To make things even easier, we can require our context window to only include wo
 Even with such a simple corpus, we can begin to recognize some patterns. “Math” and “programming” are both context to “like”. While this might not be picked up by the model, both of these words can be understood as things that I like.
 
 #### Step 1
-The first step is to one hot encode our classes like we did above with the 'I like turtles' example (the words in our vocabulary): I, like, math, programming, today, is, Friday, a, good, day
+The first step is to one hot encode our classes (the words in our vocabulary): I, like, math, programming, today, is, Friday, a, good, day
 
 #### Step 2
 Create a feed forward neural network with one hidden layer and an output layer using the hierarchical softmax activation function. The data set used to train the network uses the one hot encoded context vector to predict the one hot encoded target vector.
@@ -157,14 +157,15 @@ The number of neurons in the hidden layer corresponds to the number of dimension
 #### Step 3
 Obtain the weights of the hidden network. Each row in the weight matrix corresponds to the vector of each word in the vocabulary.
 
-Realistically, this is not something that we do very often. Good word2vec models require a very large corpus in the billions of words. Fortunately, pre-trained models are easy to use and find. You can download the word2vec model trained over the 100 billion word Google News corpus on their website, or you can use GluonNLP to load a set of pre-trained word embedding.
+Realistically, this is not something that we do very often. Good word2vec models require a very large corpus in the billions of words. Fortunately, pre-trained models are easy to use and find. You can download the word2vec model trained over the 100 billion word Google News corpus on their website, or you can use GluonNLP to load a set of pre-trained word embedding like we will in the next notebook.
 
-Here, we'll show you how to create the model and train it, but, in the end, will use pre-built word embeddings that have been independently verified for accuracy for testing and understanding.
+Here, we'll show you how to create the model and train it, but, in the end, will use pre-built word embeddings that have been independently verified for accuracy for testing and understanding and for the task of sentiment analysis in the next notebook.
 
 ## Building the Skip-gram model
 
-In this section, we will train a skip-gram model.
-First, import the packages and modules required for the experiment, and load the PTB data set.
+In this section, we train a skip-gram model.
+
+First, we must import the packages and modules required for the experiment and load the PTB data set.
 
 ```{.python .input  n=1}
 import d2l
