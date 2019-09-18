@@ -38,7 +38,7 @@ Note how these two effects help address the gradient calculation problem stated 
 
 The word2vec C code implements an equation for calculating a probability with which to keep a given word in the vocabulary.
 
-$w_i$ is the word, $z(w_i)$ is the fraction of the total words in the corpus that are that word. For example, if the word “peanut” occurs 1,000 times in a 1 billion word corpus, then $z(‘peanut’) = 1E-6$.
+$w_i$ is the word, $z(w_i)$ is the fraction of the total words in the corpus that are that word. For example, if the word “peanut” occurs 1,000 times in a 1 billion word corpus, then $z('peanut') = 1E-6$.
 
 There is also a parameter in the code named ‘sample’ which controls how much subsampling occurs, and the default value is 0.001. Smaller values of ‘sample’ mean words are less likely to be kept.
 
