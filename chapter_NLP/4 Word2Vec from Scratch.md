@@ -29,9 +29,9 @@ Word2Vec implements a “subsampling” scheme to address this. For each word we
 
 If we have a window size of 10, and we remove a specific instance of “the” from our text:
 
-    1. As we train on the remaining words, “the” will not appear in any of their context windows.
-    2. We’ll have 10 fewer training samples where “the” is the input word.
-    
+- As we train on the remaining words, “the” will not appear in any of their context windows.
+- We’ll have 10 fewer training samples where “the” is the input word.
+
 Note how these two effects help address the gradient calculation problem stated above.
 
 ### Sampling rate
@@ -107,7 +107,7 @@ Here, the gradient computation in each step of the training is no longer related
 
 ## Hierarchical Softmax
 
-Hierarchical softmax is an alternative to the softmax in which the probability of any one outcome depends on a number of model parameters that is only logarithmic in the total number of outcomes. In “vanilla” softmax, on the other hand, the number of such parameters is linear in the number of total number of outcomes. In a case where there are many outcomes (e.g. in language modelling) this can be a huge difference. The consequence is that models using hierarchical softmax are significantly faster to train with stochastic gradient descent, since only the parameters upon which the current training example depend need to be updated, and less updates means we can move on to the next training example sooner. At evaluation time, hierarchical softmax models allow faster calculation of individual outcomes, again because they depend on less parameters (and because the calculation using the parameters is just as straightforward as in the softmax case). So hierarchical softmax is very interesting from a computational point-of-view. 
+Hierarchical softmax is an alternative to the softmax in which the probability of any one outcome depends on a number of model parameters that is only logarithmic in the total number of outcomes. In “vanilla” softmax, on the other hand, the number of such parameters is linear in the number of total number of outcomes. In a case where there are many outcomes (e.g. in language modelling) this can be a huge difference. The consequence is that models using hierarchical softmax are significantly faster to train with stochastic gradient descent, since only the parameters upon which the current training example depend need to be updated, and less updates means we can move on to the next training example sooner. At evaluation time, hierarchical softmax models allow faster calculation of individual outcomes, again because they depend on less parameters (and because the calculation using the parameters is just as straightforward as in the softmax case). So hierarchical softmax is very interesting from a computational point-of-view.
 
 It uses a binary tree for data structure, with the leaf nodes of the tree representing every word in the dictionary $\mathcal{V}$.
 
@@ -161,10 +161,12 @@ Realistically, this is not something that we do very often. Good word2vec models
 
 Here, we'll show you how to create the model and train it, but, in the end, will use pre-built word embeddings that have been independently verified for accuracy for testing and understanding.
 
+## Building the Skip-gram model
+
 In this section, we will train a skip-gram model.
 First, import the packages and modules required for the experiment, and load the PTB data set.
 
-```{.python .input  n=13}
+```{.python .input  n=1}
 import d2l
 import mxnet as mx
 from mxnet import autograd, gluon, nd
@@ -173,8 +175,6 @@ from mxnet.gluon import nn
 batch_size, max_window_size, num_noise_words = 512, 5, 5
 data_iter, vocab = d2l.load_data_ptb(512, 5, 5)
 ```
-
-## The Skip-Gram Model
 
 We will implement the skip-gram model by using embedding layers and mini-batch multiplication. These methods are also often used to implement other natural language processing applications.
 
@@ -188,37 +188,11 @@ embed.initialize()
 embed.weight
 ```
 
-```{.json .output n=14}
-[
- {
-  "data": {
-   "text/plain": "Parameter embedding3_weight (shape=(20, 4), dtype=float32)"
-  },
-  "execution_count": 14,
-  "metadata": {},
-  "output_type": "execute_result"
- }
-]
-```
-
 The input of the embedding layer is the index of the word. When we enter the index $i$ of a word, the embedding layer returns the $i$th row of the weight matrix as its word vector. Below we enter an index of shape (2,3) into the embedding layer. Because the dimension of the word vector is 4, we obtain a word vector of shape (2,3,4).
 
 ```{.python .input  n=15}
 x = nd.array([[1, 2, 3], [4, 5, 6]])
 embed(x)
-```
-
-```{.json .output n=15}
-[
- {
-  "data": {
-   "text/plain": "\n[[[-0.00345948 -0.06504926  0.03971072 -0.00974366]\n  [ 0.00790012  0.00140236 -0.04761861  0.00506485]\n  [-0.04986389  0.02539495  0.02092483 -0.03113655]]\n\n [[ 0.00549131 -0.05195952 -0.02440413 -0.01502541]\n  [-0.04941805  0.0638968  -0.04761819 -0.04380167]\n  [-0.05188227  0.05655775  0.01104914  0.00613283]]]\n<NDArray 2x3x4 @cpu(0)>"
-  },
-  "execution_count": 15,
-  "metadata": {},
-  "output_type": "execute_result"
- }
-]
 ```
 
 ### Mini-batch Multiplication
@@ -229,19 +203,6 @@ We can multiply the matrices in two mini-batches one by one, by the mini-batch m
 X = nd.ones((2, 1, 4))
 Y = nd.ones((2, 4, 6))
 nd.batch_dot(X, Y).shape
-```
-
-```{.json .output n=16}
-[
- {
-  "data": {
-   "text/plain": "(2, 1, 6)"
-  },
-  "execution_count": 16,
-  "metadata": {},
-  "output_type": "execute_result"
- }
-]
 ```
 
 ### Skip-gram Model Forward Calculation
@@ -260,19 +221,6 @@ Verify that the output shape should be (batch size, 1, `max_len`).
 
 ```{.python .input  n=18}
 skip_gram(nd.ones((2,1)), nd.ones((2,4)), embed, embed).shape
-```
-
-```{.json .output n=18}
-[
- {
-  "data": {
-   "text/plain": "(2, 1, 4)"
-  },
-  "execution_count": 18,
-  "metadata": {},
-  "output_type": "execute_result"
- }
-]
 ```
 
 ## Training
@@ -296,19 +244,6 @@ pred = nd.array([[.5]*4]*2)
 label = nd.array([[1,0,1,0]]*2)
 mask = nd.array([[1, 1, 1, 1], [1, 1, 0, 0]])
 loss(pred, label, mask)
-```
-
-```{.json .output n=20}
-[
- {
-  "data": {
-   "text/plain": "\n[0.724077  0.3620385]\n<NDArray 2 @cpu(0)>"
-  },
-  "execution_count": 20,
-  "metadata": {},
-  "output_type": "execute_result"
- }
-]
 ```
 
 ### Initialize Model Parameters

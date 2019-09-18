@@ -9,30 +9,30 @@ Co-occurrence simply means, that for a given corpus, the co-occurrence of a pair
 
 Context window is specified by a number and the direction. So what does a context window of 2 mean? Let's look at an example below:
 
- 
+
 
 | **Fabulous**	| **Fairytale**	| _Fox_ | **Flew** | **Far** | From |	Five | Feet | Forwards |
 |---|:--:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 
-The words "Fabulous", "Fairytale", "Flew", and "Far" (bolded) are in a fixed context window of 2 for the word ‘Fox’ and for calculating the co-occurrence only these words will be counted. 
+The words "Fabulous", "Fairytale", "Flew", and "Far" (bolded) are in a fixed context window of 2 for the word ‘Fox’ and for calculating the co-occurrence only these words will be counted.
 
 Now, let us take an example corpus to calculate a single co-occurrence matrix.
 
-Corpus = 
+Corpus =
 
-    - He is not lazy.
+- He is not lazy.
 
-    - He is intelligent.
+- He is intelligent.
 
-    - He is smart.
+- He is smart.
 
- 
+
 
 | - | He | is  | not  | lazy | intelligent | smart |
 |--- |:--:|:-:  |:-:   |:-:   |:-:          |:-:    |
 | He | 0 | 	4	| 2 | 1 | 2 | 1 |
-| is | 4 | 0  | 1 | 2  | 2 | 1 | 
-| not | 2 | 1 | 0 | 1 | 0 | 0 | 
+| is | 4 | 0  | 1 | 2  | 2 | 1 |
+| not | 2 | 1 | 0 | 1 | 0 | 0 |
 | lazy	 | 1 | 2 | 1 | 0 | 0 | 0 |
 | intelligent |	2 | 2 | 0 | 0 | 0 | 0 |
 | smart | 1 | 1 | 0 | 0 | 0 | 0 |
@@ -53,7 +53,7 @@ Let's take a look at this simple example of one-hot encoding once again. The cou
 
 > The boy liked the turtles.
 
-The length of the above sentence is five, but there are four unique words in the vocabulary, "the", "boy", "liked", and "turtles." So the length of our embedding vectors for each would be four. For "the," the embedding would look like `[1, 0, 0, 0]`, the embedding for boy would be `[0, 1, 0, 0]`, the embedding for liked would be `[0, 0, 1, 0]`. The embedding for the next "the" would reuse the one-hot vector embedding used previously, and default to `[1, 0, 0, 0]` for every re-occurrence of "the," and lastly, the embedding for turtles would be `[0, 0, 0, 1]`. These don't represent any of the features of syntactic or semantic similarity; these only represent the most basic feature of whether or not a word occurred or not. The same happens with the TF-IDF implementation of word embeddings in the last notebook. 
+The length of the above sentence is five, but there are four unique words in the vocabulary, "the", "boy", "liked", and "turtles." So the length of our embedding vectors for each would be four. For "the," the embedding would look like `[1, 0, 0, 0]`, the embedding for boy would be `[0, 1, 0, 0]`, the embedding for liked would be `[0, 0, 1, 0]`. The embedding for the next "the" would reuse the one-hot vector embedding used previously, and default to `[1, 0, 0, 0]` for every re-occurrence of "the," and lastly, the embedding for turtles would be `[0, 0, 0, 1]`. These don't represent any of the features of syntactic or semantic similarity; these only represent the most basic feature of whether or not a word occurred or not. The same happens with the TF-IDF implementation of word embeddings in the last notebook.
 
 Any calculations or computation that one would like to do with these one-hot vectors or TF-IDF vectors would be a problem as the inherent sparsity of these vectors makes it increasingly inefficient as the vocabulary size increases. That's not to say that they haven't seen any success, but the success is highly limited and easily improvable. We will take a look at how to make these vectors less sparse and more meaningful in a future notebook.
 
@@ -112,7 +112,7 @@ Let's further dive into depth of firstly, the skip-gram model, followed by the B
 
 ## The Skip-Gram Model
 
-The skip-gram model assumes that a word can be used to generate the words that surround it in a text sequence. For example, we assume that the text sequence is "the", "man", "loves", "his", and "son". We use "loves" as the central target word and set the context window size to 2. As shown in Figure 12.1, given the central target word "loves", the skip-gram model is concerned with the conditional probability for generating the context words, "the", "man", "his" and "son", that are within a distance of no more than 2 words, which is
+The skip-gram model assumes that a word can be used to generate the words that surround it in a text sequence. For example, we assume that the text sequence is "the", "man", "loves", "his", and "son". We use "loves" as the central target word and set the context window size to 2. Given the central target word "loves", the skip-gram model is concerned with the conditional probability for generating the context words, "the", "man", "his" and "son", that are within a distance of no more than 2 words, which is
 
 $$\mathbb{P}(\textrm{"the"},\textrm{"man"},\textrm{"his"},\textrm{"son"}\mid\textrm{"loves"}).$$
 
@@ -164,7 +164,7 @@ After the training, for any word in the dictionary with index $i$, we are going 
 
 ## The Continuous Bag Of Words (CBOW) Model
 
-The continuous bag of words (CBOW) model is similar to the skip-gram model. The biggest difference is that the CBOW model assumes that the central target word is generated based on the context words before and after it in the text sequence. With the same text sequence "the", "man", "loves", "his" and "son", in which "loves" is the central target word, given a context window size of 2, the CBOW model is concerned with the conditional probability of generating the target word "loves" based on the context words "the", "man", "his" and "son"(as shown in Figure 12.2), such as
+The continuous bag of words (CBOW) model is similar to the skip-gram model. The biggest difference is that the CBOW model assumes that the central target word is generated based on the context words before and after it in the text sequence. With the same text sequence "the", "man", "loves", "his" and "son", in which "loves" is the central target word, given a context window size of 2, the CBOW model is concerned with the conditional probability of generating the target word "loves" based on the context words "the", "man", "his" and "son", such as
 
 $$\mathbb{P}(\textrm{"loves"}\mid\textrm{"the"},\textrm{"man"},\textrm{"his"},\textrm{"son"}).$$
 
