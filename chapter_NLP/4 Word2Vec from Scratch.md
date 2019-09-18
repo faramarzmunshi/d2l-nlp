@@ -1,6 +1,8 @@
 # Word2Vec from Scratch
 
-Recall content of the last section.  The core feature of the skip-gram model is the use of softmax operations to compute the conditional probability of generating context word $w_o$ based on the given central target word $w_c$.
+In the last section, we defined and understood the mathematics behind the Skip-gram and CBOW models. But to understand how to train Word2Vec and actually create our own embeddings, we need to understand two more core things about the implementation of word2vec: negative sampling and hierarchical softmax. Once we understand those two, we will walk through the implementation of Word2Vec with Gluon from scratch, how to train the embeddings, and in the next notebook, we will use the pre-trained embeddings and GluonNLP for sentiment analysis.
+
+Recall from the last notebook that one of the core features of the skip-gram model is the use of softmax operations to compute the conditional probability of generating context word $w_o$ based on the given central target word $w_c$.
 
 $$\mathbb{P}(w_o \mid w_c) = \frac{\text{exp}(\mathbf{u}_o^\top \mathbf{v}_c)}{ \sum_{i \in \mathcal{V}} \text{exp}(\mathbf{u}_i^\top \mathbf{v}_c)}.$$
 
@@ -10,13 +12,65 @@ $$-\log \mathbb{P}(w_o \mid w_c) =
 -\mathbf{u}_o^\top \mathbf{v}_c + \log\left(\sum_{i \in \mathcal{V}} \text{exp}(\mathbf{u}_i^\top \mathbf{v}_c)\right).$$
 
 
-Because the softmax operation has considered that the context word could be any word in the dictionary $\mathcal{V}$, the loss mentioned above actually includes the sum of the number of items in the dictionary size. From the last section, we know that for both the skip-gram model and CBOW model, because they both get the conditional probability using a softmax operation, the gradient computation for each step contains the sum of the number of items in the dictionary size. For larger dictionaries with hundreds of thousands or even millions of words, the overhead for computing each gradient may be too high.  In order to reduce such computational complexity, we will introduce two approximate training methods in this section: negative sampling and hierarchical softmax. Since there is no major difference between the skip-gram model and the CBOW model, we will only use the skip-gram model as an example to introduce these two training methods in this section.
+Because the softmax operation has considered that the context word could be any word in the dictionary $\mathcal{V}$, the loss mentioned above actually includes the sum of the number of items in the dictionary size. We know that for both the skip-gram model and CBOW model, because they both get the conditional probability using a softmax operation, the gradient computation for each step contains the sum of the number of items in the dictionary size. For larger dictionaries with hundreds of thousands or even millions of words, the overhead for computing the gradients may be too high. In order to reduce computational complexity and our computational footprint, we introduce the aformentioned two training methods for approximation in this section: negative sampling and hierarchical softmax. Since there are no major differences between skip-gram and CBOW, we only use the skip-gram model as an example to introduce these two training methods in this section.
 
 
+## Negative Sampling and Subsampling
 
-## Negative Sampling
+Before we delve into the math, let's analyze the overall concept of negative sampling as well as subsampling in general. The below example shows some of the training samples (word pairs) we would take from the sentence “The quick brown fox jumps over the lazy dog.” We’ve used a small window size of 2 just for the example. The word highlighted in blue is the input word.
 
-Negative sampling modifies the original objective function. Given a context window for the central target word $w_c$, we will treat it as an event for context word $w_o$ to appear in the context window and compute the probability of this event from
+![Training Data](../img/training_data.png)
+
+There are two “problems” with common words like “the”:
+
+When looking at word pairs, (“fox”, “the”) doesn’t tell us much about the meaning of “fox”. “the” appears in the context of pretty much every word.
+We will have many more samples of (“the”, …) than we need to learn a good vector for “the”.
+Word2Vec implements a “subsampling” scheme to address this. For each word we encounter in our training text, there is a chance that we will effectively delete it from the text. The probability that we cut the word is related to the word’s frequency.
+
+If we have a window size of 10, and we remove a specific instance of “the” from our text:
+
+    1. As we train on the remaining words, “the” will not appear in any of their context windows.
+    2. We’ll have 10 fewer training samples where “the” is the input word.
+    
+Note how these two effects help address the gradient calculation problem stated above.
+
+### Sampling rate
+
+The word2vec C code implements an equation for calculating a probability with which to keep a given word in the vocabulary.
+
+$w_i$ is the word, $z(w_i)$ is the fraction of the total words in the corpus that are that word. For example, if the word “peanut” occurs 1,000 times in a 1 billion word corpus, then $z(‘peanut’) = 1E-6$.
+
+There is also a parameter in the code named ‘sample’ which controls how much subsampling occurs, and the default value is 0.001. Smaller values of ‘sample’ mean words are less likely to be kept.
+
+$P(w_i)$ is the probability of keeping the word:
+
+$$ P(w_i) = (\sqrt{\frac{z(w_i)}{0.001}} + 1) * \frac{0.001}{z(w_i)} $$
+
+No single word should be a very large percentage of the corpus, so we want to look at pretty small values on the x-axis.
+
+Here are some interesting points in this function (again this is using the default sample value of 0.001).
+
+- $P(w_i) = 1.0$ (100% chance of being kept) when $z(w_i)<=0.0026 $. This means that only words which represent more than 0.26% of the total words will be subsampled.
+- $P(w_i)=0.5$ (50% chance of being kept) when $z(w_i)=0.00746$.
+- $P(w_i)=0.033$ (3.3% chance of being kept) when $z(w_i)=1.0$. That is, if the corpus consisted entirely of word $w_i$, which of course is ridiculous.
+
+### Negative Sampling
+
+Training a neural network means taking a training example and adjusting all of the neuron weights slightly so that it predicts that training sample more accurately. In other words, each training sample will tweak all of the weights in the neural network.
+
+As we discussed above, the size of our word vocabulary means that our skip-gram neural network has a tremendous number of weights, all of which would be updated slightly by every one of our billions of training samples!
+
+Negative sampling addresses this by having each training sample only modify a small percentage of the weights, rather than all of them. Here’s how it works.
+
+When training the network on the word pair (“fox”, “quick”), recall that the “label” or “correct output” of the network is a one-hot vector. That is, for the output neuron corresponding to “quick” to output a 1, and for all of the other thousands of output neurons to output a 0.
+
+With negative sampling, we are instead going to randomly select just a small number of “negative” words (let’s say 5) to update the weights for. (In this context, a “negative” word is one for which we want the network to output a 0 for). We will also still update the weights for our “positive” word (which is the word “quick” in our current example).
+
+We will just be updating the weights for our positive word (“quick”), plus the weights for 5 other words that we want to output 0. That’s a total of 6 output neurons, and 1,800 weight values total. That’s only 0.06% of the 3M weights in the output layer!
+
+In the hidden layer, only the weights for the input word are updated (this is true whether you’re using Negative Sampling or not).
+
+To be more mathematical: Negative sampling modifies the original objective function. Given a context window for the central target word $w_c$, we will treat it as an event for context word $w_o$ to appear in the context window and compute the probability of this event from
 
 $$\mathbb{P}(D=1\mid w_c, w_o) = \sigma(\mathbf{u}_o^\top \mathbf{v}_c),$$
 
@@ -53,7 +107,9 @@ Here, the gradient computation in each step of the training is no longer related
 
 ## Hierarchical Softmax
 
-Hierarchical softmax is another type of approximate training method. It uses a binary tree for data structure, with the leaf nodes of the tree representing every word in the dictionary $\mathcal{V}$.
+Hierarchical softmax is an alternative to the softmax in which the probability of any one outcome depends on a number of model parameters that is only logarithmic in the total number of outcomes. In “vanilla” softmax, on the other hand, the number of such parameters is linear in the number of total number of outcomes. In a case where there are many outcomes (e.g. in language modelling) this can be a huge difference. The consequence is that models using hierarchical softmax are significantly faster to train with stochastic gradient descent, since only the parameters upon which the current training example depend need to be updated, and less updates means we can move on to the next training example sooner. At evaluation time, hierarchical softmax models allow faster calculation of individual outcomes, again because they depend on less parameters (and because the calculation using the parameters is just as straightforward as in the softmax case). So hierarchical softmax is very interesting from a computational point-of-view. 
+
+It uses a binary tree for data structure, with the leaf nodes of the tree representing every word in the dictionary $\mathcal{V}$.
 
 ![Hierarchical Softmax. Each leaf node of the tree represents a word in the dictionary. ](../img/hi-softmax.svg)
 
@@ -95,7 +151,7 @@ Even with such a simple corpus, we can begin to recognize some patterns. “Math
 The first step is to one hot encode our classes like we did above with the 'I like turtles' example (the words in our vocabulary): I, like, math, programming, today, is, Friday, a, good, day
 
 #### Step 2
-Create a feed forward neural network with one hidden layer and an output layer using the softmax activation function. The data set used to train the network uses the one hot encoded context vector to predict the one hot encoded target vector.
+Create a feed forward neural network with one hidden layer and an output layer using the hierarchical softmax activation function. The data set used to train the network uses the one hot encoded context vector to predict the one hot encoded target vector.
 The number of neurons in the hidden layer corresponds to the number of dimensions in the final word vectors.
 
 #### Step 3
@@ -105,11 +161,12 @@ Realistically, this is not something that we do very often. Good word2vec models
 
 Here, we'll show you how to create the model and train it, but, in the end, will use pre-built word embeddings that have been independently verified for accuracy for testing and understanding.
 
-In this section, we will train a skip-gram model defined in the last notebook.
+In this section, we will train a skip-gram model.
 First, import the packages and modules required for the experiment, and load the PTB data set.
 
-```{.python .input  n=1}
+```{.python .input  n=13}
 import d2l
+import mxnet as mx
 from mxnet import autograd, gluon, nd
 from mxnet.gluon import nn
 
@@ -125,19 +182,19 @@ We will implement the skip-gram model by using embedding layers and mini-batch m
 
 The layer in which the obtained word is embedded is called the embedding layer, which can be obtained by creating an `nn.Embedding` instance in Gluon. The weight of the embedding layer is a matrix whose number of rows is the dictionary size (`input_dim`) and whose number of columns is the dimension of each word vector (`output_dim`). We set the dictionary size to 20 and the word vector dimension to 4.
 
-```{.python .input  n=2}
+```{.python .input  n=14}
 embed = nn.Embedding(input_dim=20, output_dim=4)
 embed.initialize()
 embed.weight
 ```
 
-```{.json .output n=2}
+```{.json .output n=14}
 [
  {
   "data": {
-   "text/plain": "Parameter embedding0_weight (shape=(20, 4), dtype=float32)"
+   "text/plain": "Parameter embedding3_weight (shape=(20, 4), dtype=float32)"
   },
-  "execution_count": 2,
+  "execution_count": 14,
   "metadata": {},
   "output_type": "execute_result"
  }
@@ -146,18 +203,18 @@ embed.weight
 
 The input of the embedding layer is the index of the word. When we enter the index $i$ of a word, the embedding layer returns the $i$th row of the weight matrix as its word vector. Below we enter an index of shape (2,3) into the embedding layer. Because the dimension of the word vector is 4, we obtain a word vector of shape (2,3,4).
 
-```{.python .input  n=4}
+```{.python .input  n=15}
 x = nd.array([[1, 2, 3], [4, 5, 6]])
 embed(x)
 ```
 
-```{.json .output n=4}
+```{.json .output n=15}
 [
  {
   "data": {
-   "text/plain": "\n[[[ 0.01438687  0.05011239  0.00628365  0.04861524]\n  [-0.01068833  0.01729892  0.02042518 -0.01618656]\n  [-0.00873779 -0.02834515  0.05484822 -0.06206018]]\n\n [[ 0.06491279 -0.03182812 -0.01631819 -0.00312688]\n  [ 0.0408415   0.04370362  0.00404529 -0.0028032 ]\n  [ 0.00952624 -0.01501013  0.05958354  0.04705103]]]\n<NDArray 2x3x4 @cpu(0)>"
+   "text/plain": "\n[[[-0.00345948 -0.06504926  0.03971072 -0.00974366]\n  [ 0.00790012  0.00140236 -0.04761861  0.00506485]\n  [-0.04986389  0.02539495  0.02092483 -0.03113655]]\n\n [[ 0.00549131 -0.05195952 -0.02440413 -0.01502541]\n  [-0.04941805  0.0638968  -0.04761819 -0.04380167]\n  [-0.05188227  0.05655775  0.01104914  0.00613283]]]\n<NDArray 2x3x4 @cpu(0)>"
   },
-  "execution_count": 4,
+  "execution_count": 15,
   "metadata": {},
   "output_type": "execute_result"
  }
@@ -168,19 +225,19 @@ embed(x)
 
 We can multiply the matrices in two mini-batches one by one, by the mini-batch multiplication operation `batch_dot`. Suppose the first batch contains $n$ matrices $\boldsymbol{X}_1, \ldots, \boldsymbol{X}_n$ with a shape of $a\times b$, and the second batch contains $n$ matrices $\boldsymbol{Y}_1, \ldots, \boldsymbol{Y}_n$ with a shape of $b\times c$. The output of matrix multiplication on these two batches are $n$ matrices $\boldsymbol{X}_1\boldsymbol{Y}_1, \ldots, \boldsymbol{X}_n\boldsymbol{Y}_n$ with a shape of $a\times c$. Therefore, given two NDArrays of shape ($n$, $a$, $b$) and ($n$, $b$, $c$), the shape of the mini-batch multiplication output is ($n$, $a$, $c$).
 
-```{.python .input  n=5}
+```{.python .input  n=16}
 X = nd.ones((2, 1, 4))
 Y = nd.ones((2, 4, 6))
 nd.batch_dot(X, Y).shape
 ```
 
-```{.json .output n=5}
+```{.json .output n=16}
 [
  {
   "data": {
    "text/plain": "(2, 1, 6)"
   },
-  "execution_count": 5,
+  "execution_count": 16,
   "metadata": {},
   "output_type": "execute_result"
  }
@@ -191,7 +248,7 @@ nd.batch_dot(X, Y).shape
 
 In forward calculation, the input of the skip-gram model contains the central target word index `center` and the concatenated context and noise word index `contexts_and_negatives`. In which, the `center` variable has the shape (batch size, 1), while the `contexts_and_negatives` variable has the shape (batch size, `max_len`). These two variables are first transformed from word indexes to word vectors by the word embedding layer, and then the output of shape (batch size, 1, `max_len`) is obtained by mini-batch multiplication. Each element in the output is the inner product of the central target word vector and the context word vector or noise word vector.
 
-```{.python .input  n=6}
+```{.python .input  n=17}
 def skip_gram(center, contexts_and_negatives, embed_v, embed_u):
     v = embed_v(center)
     u = embed_u(contexts_and_negatives)
@@ -201,17 +258,17 @@ def skip_gram(center, contexts_and_negatives, embed_v, embed_u):
 
 Verify that the output shape should be (batch size, 1, `max_len`).
 
-```{.python .input  n=7}
+```{.python .input  n=18}
 skip_gram(nd.ones((2,1)), nd.ones((2,4)), embed, embed).shape
 ```
 
-```{.json .output n=7}
+```{.json .output n=18}
 [
  {
   "data": {
    "text/plain": "(2, 1, 4)"
   },
-  "execution_count": 7,
+  "execution_count": 18,
   "metadata": {},
   "output_type": "execute_result"
  }
@@ -226,7 +283,7 @@ Before training the word embedding model, we need to define the loss function of
 
 According to the definition of the loss function in negative sampling, we can directly use Gluon's binary cross-entropy loss function `SigmoidBinaryCrossEntropyLoss`.
 
-```{.python .input  n=8}
+```{.python .input  n=19}
 loss = gluon.loss.SigmoidBinaryCrossEntropyLoss()
 ```
 
@@ -234,20 +291,20 @@ It is worth mentioning that we can use the mask variable to specify the partial 
 
 Given two identical examples, different masks lead to different loss values.
 
-```{.python .input  n=9}
+```{.python .input  n=20}
 pred = nd.array([[.5]*4]*2)
 label = nd.array([[1,0,1,0]]*2)
 mask = nd.array([[1, 1, 1, 1], [1, 1, 0, 0]])
 loss(pred, label, mask)
 ```
 
-```{.json .output n=9}
+```{.json .output n=20}
 [
  {
   "data": {
    "text/plain": "\n[0.724077  0.3620385]\n<NDArray 2 @cpu(0)>"
   },
-  "execution_count": 9,
+  "execution_count": 20,
   "metadata": {},
   "output_type": "execute_result"
  }
@@ -258,7 +315,7 @@ loss(pred, label, mask)
 
 We construct the embedding layers of the central and context words, respectively, and set the hyper-parameter word vector dimension `embed_size` to 100.
 
-```{.python .input  n=10}
+```{.python .input  n=21}
 embed_size = 100
 net = nn.Sequential()
 net.add(nn.Embedding(input_dim=len(vocab), output_dim=embed_size),
@@ -267,9 +324,9 @@ net.add(nn.Embedding(input_dim=len(vocab), output_dim=embed_size),
 
 ### Training
 
-The training function is defined below. Because of the existence of padding, the calculation of the loss function is slightly different compared to the previous training functions.
+The training function is defined below. Because of the existence of padding, the calculation of the loss function is slightly different compared to the previous training functions. If you do not have an Nvidia GPU, the `ctx=d2l.try_gpu()` must be swapped for `ctx=mx.cpu()`.
 
-```{.python .input  n=11}
+```{.python .input  n=24}
 def train(net, data_iter, lr, num_epochs, ctx=d2l.try_gpu()):
     net.initialize(ctx=ctx, force_reinit=True)
     trainer = gluon.Trainer(net.collect_params(), 'adam',
@@ -297,43 +354,16 @@ def train(net, data_iter, lr, num_epochs, ctx=d2l.try_gpu()):
 
 Now, we can train a skip-gram model using negative sampling.
 
-```{.python .input  n=12}
+```{.python .input}
 lr, num_epochs = 0.01, 5
 train(net, data_iter, lr, num_epochs)
-```
-
-```{.json .output n=12}
-[
- {
-  "ename": "MXNetError",
-  "evalue": "[15:20:55] src/ndarray/ndarray.cc:1285: GPU is not enabled\nStack trace:\n  [bt] (0) 1   libmxnet.so                         0x0000000119806d29 mxnet::op::NDArrayOpProp::~NDArrayOpProp() + 4473\n  [bt] (1) 2   libmxnet.so                         0x000000011ae6d02f mxnet::CopyFromTo(mxnet::NDArray const&, mxnet::NDArray const&, int, bool) + 4671\n  [bt] (2) 3   libmxnet.so                         0x000000011ad8fd99 mxnet::imperative::PushFComputeEx(std::__1::function<void (nnvm::NodeAttrs const&, mxnet::OpContext const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&)> const&, nnvm::Op const*, nnvm::NodeAttrs const&, mxnet::Context const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::Resource, std::__1::allocator<mxnet::Resource> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&)::'lambda'(mxnet::RunContext)::operator()(mxnet::RunContext) const + 217\n  [bt] (3) 4   libmxnet.so                         0x000000011ad7e74e mxnet::imperative::PushFComputeEx(std::__1::function<void (nnvm::NodeAttrs const&, mxnet::OpContext const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&)> const&, nnvm::Op const*, nnvm::NodeAttrs const&, mxnet::Context const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::Resource, std::__1::allocator<mxnet::Resource> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&) + 1230\n  [bt] (4) 5   libmxnet.so                         0x000000011ad7d05a mxnet::Imperative::InvokeOp(mxnet::Context const&, nnvm::NodeAttrs const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&, mxnet::DispatchMode, mxnet::OpStatePtr) + 810\n  [bt] (5) 6   libmxnet.so                         0x000000011ad81991 mxnet::Imperative::Invoke(mxnet::Context const&, nnvm::NodeAttrs const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&) + 817\n  [bt] (6) 7   libmxnet.so                         0x000000011acc73ae SetNDInputsOutputs(nnvm::Op const*, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> >*, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> >*, int, void* const*, int*, int, int, void***) + 1582\n  [bt] (7) 8   libmxnet.so                         0x000000011acc80f0 MXImperativeInvokeEx + 176\n  [bt] (8) 9   _ctypes.cpython-37m-darwin.so       0x000000010fc9236f ffi_call_unix64 + 79\n\n",
-  "output_type": "error",
-  "traceback": [
-   "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
-   "\u001b[0;31mMXNetError\u001b[0m                                Traceback (most recent call last)",
-   "\u001b[0;32m<ipython-input-12-c04f85570b58>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0mlr\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnum_epochs\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;36m0.01\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m5\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mtrain\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mnet\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdata_iter\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlr\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnum_epochs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
-   "\u001b[0;32m<ipython-input-11-88131a5051b8>\u001b[0m in \u001b[0;36mtrain\u001b[0;34m(net, data_iter, lr, num_epochs, ctx)\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;32mdef\u001b[0m \u001b[0mtrain\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mnet\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdata_iter\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlr\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnum_epochs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0md2l\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtry_gpu\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m     \u001b[0mnet\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0minitialize\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mctx\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mctx\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mforce_reinit\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mTrue\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      3\u001b[0m     trainer = gluon.Trainer(net.collect_params(), 'adam',\n\u001b[1;32m      4\u001b[0m                             {'learning_rate': lr})\n\u001b[1;32m      5\u001b[0m     animator = d2l.Animator(xlabel='epoch', ylabel='loss',\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/block.py\u001b[0m in \u001b[0;36minitialize\u001b[0;34m(self, init, ctx, verbose, force_reinit)\u001b[0m\n\u001b[1;32m    503\u001b[0m             \u001b[0mWhether\u001b[0m \u001b[0mto\u001b[0m \u001b[0mforce\u001b[0m \u001b[0mre\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0minitialization\u001b[0m \u001b[0;32mif\u001b[0m \u001b[0mparameter\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0malready\u001b[0m \u001b[0minitialized\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    504\u001b[0m         \"\"\"\n\u001b[0;32m--> 505\u001b[0;31m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcollect_params\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0minitialize\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0minit\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mverbose\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mforce_reinit\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    506\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    507\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mhybridize\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mactive\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mTrue\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkwargs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/parameter.py\u001b[0m in \u001b[0;36minitialize\u001b[0;34m(self, init, ctx, verbose, force_reinit)\u001b[0m\n\u001b[1;32m    828\u001b[0m             \u001b[0minit\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mset_verbosity\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mverbose\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mverbose\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    829\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0m_\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mv\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mitems\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 830\u001b[0;31m             \u001b[0mv\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0minitialize\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;32mNone\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0minit\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mforce_reinit\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mforce_reinit\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    831\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    832\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mzero_grad\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/parameter.py\u001b[0m in \u001b[0;36minitialize\u001b[0;34m(self, init, ctx, default_init, force_reinit)\u001b[0m\n\u001b[1;32m    406\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    407\u001b[0m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_deferred_init\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0minit\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdefault_init\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 408\u001b[0;31m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_finish_deferred_init\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    409\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    410\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mreset_ctx\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/parameter.py\u001b[0m in \u001b[0;36m_finish_deferred_init\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m    300\u001b[0m                     initializer.InitDesc(self.name, {'__init__': init}), data)\n\u001b[1;32m    301\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 302\u001b[0;31m             \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_init_impl\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    303\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    304\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0m_init_impl\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdata\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx_list\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/parameter.py\u001b[0m in \u001b[0;36m_init_impl\u001b[0;34m(self, data, ctx_list)\u001b[0m\n\u001b[1;32m    312\u001b[0m             \u001b[0mdev_list\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mctx\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdevice_id\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mi\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    313\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 314\u001b[0;31m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_data\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcopyto\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mctx\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfor\u001b[0m \u001b[0mctx\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_ctx_list\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    315\u001b[0m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_init_grad\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    316\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/parameter.py\u001b[0m in \u001b[0;36m<listcomp>\u001b[0;34m(.0)\u001b[0m\n\u001b[1;32m    312\u001b[0m             \u001b[0mdev_list\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mctx\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdevice_id\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mi\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    313\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 314\u001b[0;31m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_data\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcopyto\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mctx\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfor\u001b[0m \u001b[0mctx\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_ctx_list\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    315\u001b[0m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_init_grad\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    316\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/ndarray/ndarray.py\u001b[0m in \u001b[0;36mcopyto\u001b[0;34m(self, other)\u001b[0m\n\u001b[1;32m   2091\u001b[0m         \u001b[0;32melif\u001b[0m \u001b[0misinstance\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mother\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mContext\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2092\u001b[0m             \u001b[0mhret\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mNDArray\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_new_alloc_handle\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mshape\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mother\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;32mTrue\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdtype\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 2093\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0m_internal\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_copyto\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mout\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mhret\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   2094\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2095\u001b[0m             \u001b[0;32mraise\u001b[0m \u001b[0mTypeError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'copyto does not support type '\u001b[0m \u001b[0;34m+\u001b[0m \u001b[0mstr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtype\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mother\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/ndarray/register.py\u001b[0m in \u001b[0;36m_copyto\u001b[0;34m(data, out, name, **kwargs)\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/_ctypes/ndarray.py\u001b[0m in \u001b[0;36m_imperative_invoke\u001b[0;34m(handle, ndargs, keys, vals, out)\u001b[0m\n\u001b[1;32m     90\u001b[0m         \u001b[0mc_str_array\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mkeys\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     91\u001b[0m         \u001b[0mc_str_array\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mstr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0ms\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfor\u001b[0m \u001b[0ms\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mvals\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 92\u001b[0;31m         ctypes.byref(out_stypes)))\n\u001b[0m\u001b[1;32m     93\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     94\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0moriginal_output\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/base.py\u001b[0m in \u001b[0;36mcheck_call\u001b[0;34m(ret)\u001b[0m\n\u001b[1;32m    251\u001b[0m     \"\"\"\n\u001b[1;32m    252\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0mret\u001b[0m \u001b[0;34m!=\u001b[0m \u001b[0;36m0\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 253\u001b[0;31m         \u001b[0;32mraise\u001b[0m \u001b[0mMXNetError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpy_str\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_LIB\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mMXGetLastError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    254\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    255\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;31mMXNetError\u001b[0m: [15:20:55] src/ndarray/ndarray.cc:1285: GPU is not enabled\nStack trace:\n  [bt] (0) 1   libmxnet.so                         0x0000000119806d29 mxnet::op::NDArrayOpProp::~NDArrayOpProp() + 4473\n  [bt] (1) 2   libmxnet.so                         0x000000011ae6d02f mxnet::CopyFromTo(mxnet::NDArray const&, mxnet::NDArray const&, int, bool) + 4671\n  [bt] (2) 3   libmxnet.so                         0x000000011ad8fd99 mxnet::imperative::PushFComputeEx(std::__1::function<void (nnvm::NodeAttrs const&, mxnet::OpContext const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&)> const&, nnvm::Op const*, nnvm::NodeAttrs const&, mxnet::Context const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::Resource, std::__1::allocator<mxnet::Resource> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&)::'lambda'(mxnet::RunContext)::operator()(mxnet::RunContext) const + 217\n  [bt] (3) 4   libmxnet.so                         0x000000011ad7e74e mxnet::imperative::PushFComputeEx(std::__1::function<void (nnvm::NodeAttrs const&, mxnet::OpContext const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&, std::__1::vector<mxnet::NDArray, std::__1::allocator<mxnet::NDArray> > const&)> const&, nnvm::Op const*, nnvm::NodeAttrs const&, mxnet::Context const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::engine::Var*, std::__1::allocator<mxnet::engine::Var*> > const&, std::__1::vector<mxnet::Resource, std::__1::allocator<mxnet::Resource> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&) + 1230\n  [bt] (4) 5   libmxnet.so                         0x000000011ad7d05a mxnet::Imperative::InvokeOp(mxnet::Context const&, nnvm::NodeAttrs const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::OpReqType, std::__1::allocator<mxnet::OpReqType> > const&, mxnet::DispatchMode, mxnet::OpStatePtr) + 810\n  [bt] (5) 6   libmxnet.so                         0x000000011ad81991 mxnet::Imperative::Invoke(mxnet::Context const&, nnvm::NodeAttrs const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> > const&) + 817\n  [bt] (6) 7   libmxnet.so                         0x000000011acc73ae SetNDInputsOutputs(nnvm::Op const*, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> >*, std::__1::vector<mxnet::NDArray*, std::__1::allocator<mxnet::NDArray*> >*, int, void* const*, int*, int, int, void***) + 1582\n  [bt] (7) 8   libmxnet.so                         0x000000011acc80f0 MXImperativeInvokeEx + 176\n  [bt] (8) 9   _ctypes.cpython-37m-darwin.so       0x000000010fc9236f ffi_call_unix64 + 79\n\n"
-  ]
- }
-]
 ```
 
 ## Applying the Word Embedding Model
 
 After training the word embedding model, we can represent similarity in meaning between words based on the cosine similarity of two word vectors. As we can see, when using the trained word embedding model, the words closest in meaning to the word "chip" are mostly related to chips.
 
-```{.python .input  n=14}
+```{.python .input}
 def get_similar_tokens(query_token, k, embed):
     W = embed.weight.data()
     x = W[vocab[query_token]]
@@ -346,25 +376,6 @@ def get_similar_tokens(query_token, k, embed):
 get_similar_tokens('chip', 3, net[0])
 ```
 
-```{.json .output n=14}
-[
- {
-  "ename": "RuntimeError",
-  "evalue": "Parameter 'embedding1_weight' has not been initialized. Note that you should initialize parameters and create Trainer with Block.collect_params() instead of Block.params because the later does not include Parameters of nested child Blocks",
-  "output_type": "error",
-  "traceback": [
-   "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
-   "\u001b[0;31mRuntimeError\u001b[0m                              Traceback (most recent call last)",
-   "\u001b[0;32m<ipython-input-14-4d3eed2289c9>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      8\u001b[0m         \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'cosine sim=%.3f: %s'\u001b[0m \u001b[0;34m%\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mcos\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0masscalar\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mvocab\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0midx_to_token\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      9\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 10\u001b[0;31m \u001b[0mget_similar_tokens\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'chip'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m3\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnet\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
-   "\u001b[0;32m<ipython-input-14-4d3eed2289c9>\u001b[0m in \u001b[0;36mget_similar_tokens\u001b[0;34m(query_token, k, embed)\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;32mdef\u001b[0m \u001b[0mget_similar_tokens\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mquery_token\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mk\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0membed\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m     \u001b[0mW\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0membed\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mweight\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      3\u001b[0m     \u001b[0mx\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mW\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mvocab\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mquery_token\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m     \u001b[0;31m# Compute the cosine similarity. Add 1e-9 for numerical stability.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m     \u001b[0mcos\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnd\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdot\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mW\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mx\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m/\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mnd\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msum\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mW\u001b[0m \u001b[0;34m*\u001b[0m \u001b[0mW\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0maxis\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m*\u001b[0m \u001b[0mnd\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msum\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mx\u001b[0m \u001b[0;34m*\u001b[0m \u001b[0mx\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m+\u001b[0m \u001b[0;36m1e-9\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msqrt\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/parameter.py\u001b[0m in \u001b[0;36mdata\u001b[0;34m(self, ctx)\u001b[0m\n\u001b[1;32m    509\u001b[0m                                \u001b[0;34m\"because its storage type is %s. Please use row_sparse_data() \"\u001b[0m\u001b[0;31m \u001b[0m\u001b[0;31m\\\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    510\u001b[0m                                \"instead.\" % (self.name, str(ctx), self._stype))\n\u001b[0;32m--> 511\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_check_and_get\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_data\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    512\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    513\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mlist_data\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;32m/usr/local/lib/python3.7/site-packages/mxnet/gluon/parameter.py\u001b[0m in \u001b[0;36m_check_and_get\u001b[0;34m(self, arr_list, ctx)\u001b[0m\n\u001b[1;32m    226\u001b[0m             \u001b[0;34m\"with Block.collect_params() instead of Block.params \"\u001b[0m\u001b[0;31m \u001b[0m\u001b[0;31m\\\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    227\u001b[0m             \u001b[0;34m\"because the later does not include Parameters of \"\u001b[0m\u001b[0;31m \u001b[0m\u001b[0;31m\\\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 228\u001b[0;31m             \"nested child Blocks\"%(self.name))\n\u001b[0m\u001b[1;32m    229\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    230\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0m_get_row_sparse\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0marr_list\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mctx\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mrow_id\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-   "\u001b[0;31mRuntimeError\u001b[0m: Parameter 'embedding1_weight' has not been initialized. Note that you should initialize parameters and create Trainer with Block.collect_params() instead of Block.params because the later does not include Parameters of nested child Blocks"
-  ]
- }
-]
-```
-
-```{.python .input}
-
-```
+References:
+    - http://building-babylon.net/2017/08/01/hierarchical-softmax/
+    - http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/
